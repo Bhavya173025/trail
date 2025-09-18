@@ -2,6 +2,7 @@ import streamlit as st
 import wikipedia
 import streamlit_authenticator as stauth
 import requests
+import pandas as pd
 
 # Debug: Show loaded secrets for verification (remove in production)
 st.write("Secrets loaded:", dict(st.secrets))
@@ -41,7 +42,12 @@ if authentication_status:
     st.sidebar.success(f"✅ Welcome {name}")
     authenticator.logout("Logout", "sidebar")
 
-    section = st.sidebar.radio("Select Section", ["Wikipedia Chatbot", "Security Tools"])
+    section = st.sidebar.radio(
+        "Select Section",
+        ["Wikipedia Chatbot", "Security Tools", "Data Visualization"]
+    )
+
+    # Wikipedia Chatbot Section
     if section == "Wikipedia Chatbot":
         st.title("📚 Wikipedia Chatbot")
         if "messages" not in st.session_state:
@@ -72,10 +78,10 @@ if authentication_status:
             else:
                 st.markdown(f"**Bot:** {msg['content']}")
 
+    # Security Tools Section
     elif section == "Security Tools":
         st.title("🛡️ AI Threat Detection and Prevention")
         st.write("Check if a URL is safe using Google Safe Browsing API.")
-        
         try:
             api_key = st.secrets["GOOGLE_SAFE_BROWSING_API_KEY"]
         except KeyError:
@@ -113,7 +119,6 @@ if authentication_status:
                 return None, f"API Error: {response.status_code}"
 
         url_input = st.text_input("Enter URL to check:")
-
         if st.button("Check URL"):
             if not url_input:
                 st.error("Please enter a URL.")
@@ -128,6 +133,27 @@ if authentication_status:
                 else:
                     st.error("⚠️ This URL is unsafe!")
                     st.json(details)
+
+    # Data Visualization Section
+    elif section == "Data Visualization":
+        st.title("📊 Data Visualization")
+        try:
+            data = pd.read_csv('data/cybersecurity_intrusion_data.csv')  # Correct path
+            # Visualize Attack vs Non-Attack Distribution
+            st.subheader("Attack vs Non-Attack Distribution")
+            attack_counts = data['attack_detected'].value_counts()
+            st.bar_chart(attack_counts)
+
+            # Visualize Protocol Usage
+            st.subheader("Network Protocol Usage")
+            protocol_counts = data['protocol_type'].value_counts()
+            st.bar_chart(protocol_counts)
+
+            # Preview Data
+            st.subheader("Preview Data")
+            st.dataframe(data.head())
+        except Exception as e:
+            st.error(f"Error loading or visualizing data: {e}")
 
 else:
     if authentication_status is False:
