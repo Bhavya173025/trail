@@ -3,6 +3,8 @@ import wikipedia
 import streamlit_authenticator as stauth
 import requests
 import pandas as pd
+import base64, time
+
 
 # Debug: Show loaded secrets for verification (remove in production)
 st.write("Secrets loaded:", dict(st.secrets))
@@ -87,10 +89,8 @@ if authentication_status:
         try:
             api_key = st.secrets["VIRUSTOTAL_API_KEY"]
         except KeyError:
-            # fallback inline key (not recommended for production)
+            # fallback inline key not recommended for production
             api_key = "eb6f6caad9a31538ced27f970b3e790af750d2da03f98bae9f3cb0ef66a34d77"
-
-        import base64, time
 
         def check_url_safety(url):
             headers = {"x-apikey": api_key}
