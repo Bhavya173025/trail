@@ -81,42 +81,68 @@ if authentication_status:
     # Security Tools Section
     elif section == "Security Tools":
         st.title("🛡️ AI Threat Detection and Prevention")
-        st.write("Check if a URL is safe using Google Safe Browsing API.")
+        st.write("Check if a URL is safe using VirusTotal API.")
+
+        # Prefer to load from secrets.toml
         try:
-            api_key = st.secrets["GOOGLE_SAFE_BROWSING_API_KEY"]
+            api_key = st.secrets["VIRUSTOTAL_API_KEY"]
         except KeyError:
-            st.error("API key not found in secrets. Please add it in your secrets.toml or Streamlit Cloud Secrets.")
-            st.stop()
+            # fallback inline key (not recommended for production)
+            api_key = "eb6f6caad9a31538ced27f970b3e790af750d2da03f98bae9f3cb0ef66a34d77"
+
+        import base64, time
 
         def check_url_safety(url):
-            endpoint = "https://safebrowsing.googleapis.com/v4/threatMatches:find"
-            body = {
-                "client": {
-                    "clientId": "sentinel-auth",
-                    "clientVersion": "1.0"
-                },
-                "threatInfo": {
-                    "threatTypes": [
-                        "MALWARE",
-                        "SOCIAL_ENGINEERING",
-                        "UNWANTED_SOFTWARE",
-                        "POTENTIALLY_HARMFUL_APPLICATION"
-                    ],
-                    "platformTypes": ["ANY_PLATFORM"],
-                    "threatEntryTypes": ["URL"],
-                    "threatEntries": [{"url": url}]
-                }
-            }
-            params = {"key": api_key}
-            response = requests.post(endpoint, params=params, json=body)
-            if response.status_code == 200:
-                result = response.json()
-                if "matches" in result:
-                    return False, result["matches"]
+            headers = {"x-apikey": api_key}
+            # Submit URL for analysis
+            resp = requests.post(
+                "https://www.virustotal.com/api/v3/urls",
+                headers=headers,
+                data={"url": url},
+                timeout=10
+            )
+            if resp.status_code not in (200, 201):
+                return None, f"API Error: {resp.status_code} - {resp.text}"
+
+            analysis_id = resp.json().get("data", {}).get("id")
+            if not analysis_id:
+                return None, "Could not retrieve analysis ID."
+
+            # Poll analysis status
+            analysis_endpoint = f"https://www.virustotal.com/api/v3/analyses/{analysis_id}"
+            start = time.time()
+            while True:
+                r = requests.get(analysis_endpoint, headers=headers, timeout=10)
+                if r.status_code != 200:
+                    return None, f"API Error: {r.status_code} - {r.text}"
+                data = r.json()
+                status = data.get("data", {}).get("attributes", {}).get("status")
+                if status == "completed":
+                    # Check verdict
+                    stats = data["data"]["attributes"].get("stats", {})
+                    malicious = stats.get("malicious", 0)
+                    suspicious = stats.get("suspicious", 0)
+                    if malicious > 0 or suspicious > 0:
+                        return False, data  # unsafe
+                    else:
+                        return True, data   # safe
+                if time.time() - start > 12:  # timeout
+                    break
+                time.sleep(1)
+
+            # fallback: fetch cached report using base64 URL id
+            url_id = base64.urlsafe_b64encode(url.encode()).decode().strip("=")
+            report = requests.get(f"https://www.virustotal.com/api/v3/urls/{url_id}", headers=headers)
+            if report.status_code == 200:
+                data = report.json()
+                stats = data["data"]["attributes"].get("last_analysis_stats", {})
+                malicious = stats.get("malicious", 0)
+                suspicious = stats.get("suspicious", 0)
+                if malicious > 0 or suspicious > 0:
+                    return False, data
                 else:
-                    return True, None
-            else:
-                return None, f"API Error: {response.status_code}"
+                    return True, data
+            return None, f"Final API error: {report.status_code}"
 
         url_input = st.text_input("Enter URL to check:")
         if st.button("Check URL"):
@@ -132,7 +158,8 @@ if authentication_status:
                     st.success("✅ This URL is safe.")
                 else:
                     st.error("⚠️ This URL is unsafe!")
-                    st.json(details)
+                st.json(details)
+
 
     # Data Visualization Section
     elif section == "Data Visualization":
