@@ -235,7 +235,7 @@ class ThreatPrevention:
 # --------------------------
 # LOGIN PAGE TITLE
 # --------------------------
-st.markdown('<div class="main-header">🛡️ Sentinel-Auth - AI Threat Detection & Prevention</div>', unsafe_allow_html=True)
+st.markdown('<div class="main-header">🛡️ Sentinel-Auth</div>', unsafe_allow_html=True)
 
 # --------------------------
 # LOGIN FORM
@@ -259,7 +259,7 @@ if authentication_status:
         st.markdown("---")
         st.markdown("### ℹ️ About")
         st.info("""
-        **Sentinel-Auth** is an AI-powered threat detection & prevention system that combines:
+        **Sentinel-Auth** is a comprehensive security system that combines:
         - Real-time URL scanning
         - Proactive threat prevention
         - Wikipedia AI chatbot
@@ -328,7 +328,7 @@ if authentication_status:
 
     # Security Tools Section
     elif "🛡️ Security Tools" in section:
-        st.markdown('<div class="section-header">🔒 AI Threat Detection Scanner</div>', unsafe_allow_html=True)
+        st.markdown('<div class="section-header">🔒 Security Scanner</div>', unsafe_allow_html=True)
         
         # Metrics cards
         col1, col2, col3 = st.columns(3)
@@ -462,9 +462,9 @@ if authentication_status:
                     with st.expander("📋 View Detailed Scan Report"):
                         st.json(details)
 
-    # NEW: THREAT PREVENTION SECTION
+    # THREAT PREVENTION SECTION
     elif "🛡️ Threat Prevention" in section:
-        st.markdown('<div class="section-header">🛡️ AI-Powered Threat Prevention</div>', unsafe_allow_html=True)
+        st.markdown('<div class="section-header">🛡️ Threat Prevention</div>', unsafe_allow_html=True)
         
         # Prevention Metrics
         col1, col2, col3, col4 = st.columns(4)
@@ -473,7 +473,7 @@ if authentication_status:
             <div class="metric-card">
                 <h3>🔐 Password</h3>
                 <h2>Strength Analyzer</h2>
-                <p>AI-Powered Security</p>
+                <p>Security Assessment</p>
             </div>
             """, unsafe_allow_html=True)
         
@@ -491,7 +491,7 @@ if authentication_status:
             <div class="metric-card">
                 <h3>💡 Security</h3>
                 <h2>Recommendations</h2>
-                <p>AI-Generated Tips</p>
+                <p>Expert Tips</p>
             </div>
             """, unsafe_allow_html=True)
         
@@ -508,7 +508,7 @@ if authentication_status:
         prev_tab1, prev_tab2, prev_tab3 = st.tabs(["🔐 Password Security", "🎣 Phishing Detection", "💡 Security Recommendations"])
         
         with prev_tab1:
-            st.subheader("AI Password Strength Analyzer")
+            st.subheader("Password Strength Analyzer")
             
             col1, col2 = st.columns([2, 1])
             with col1:
@@ -564,7 +564,7 @@ if authentication_status:
                 """, unsafe_allow_html=True)
         
         with prev_tab2:
-            st.subheader("AI Phishing Detection")
+            st.subheader("Phishing Detection")
             
             email_text = st.text_area(
                 "Paste email/text content to analyze:",
@@ -574,7 +574,7 @@ if authentication_status:
             
             if st.button("🔍 Analyze for Phishing", use_container_width=True):
                 if email_text:
-                    with st.spinner("🤖 AI analyzing content for phishing indicators..."):
+                    with st.spinner("Analyzing content for phishing indicators..."):
                         result, indicators, color = ThreatPrevention.check_phishing_indicators(email_text)
                     
                     st.markdown(f"<h3 style='color: {color};'>{result}</h3>", unsafe_allow_html=True)
@@ -598,19 +598,19 @@ if authentication_status:
                     st.warning("Please enter some text to analyze.")
         
         with prev_tab3:
-            st.subheader("AI Security Recommendations")
+            st.subheader("Security Recommendations")
             
             threat_type = st.selectbox(
                 "Select threat type for recommendations:",
                 ["phishing", "malware", "weak_password", "network"]
             )
             
-            if st.button("🎯 Get AI Recommendations", use_container_width=True):
+            if st.button("🎯 Get Recommendations", use_container_width=True):
                 recommendations = ThreatPrevention.get_security_recommendations(threat_type)
                 
                 st.markdown(f"""
                 <div class="prevention-box">
-                    <h4>🛡️ AI-Generated Security Recommendations for {threat_type.replace('_', ' ').title()}:</h4>
+                    <h4>🛡️ Security Recommendations for {threat_type.replace('_', ' ').title()}:</h4>
                 """, unsafe_allow_html=True)
                 
                 for i, rec in enumerate(recommendations, 1):
@@ -634,7 +634,7 @@ if authentication_status:
 
     # Data Visualization Section
     elif "📊 Data Visualization" in section:
-        st.markdown('<div class="section-header">📈 Cybersecurity Analytics Dashboard</div>', unsafe_allow_html=True)
+        st.markdown('<div class="section-header">📈 Cybersecurity Analytics</div>', unsafe_allow_html=True)
         
         try:
             data = pd.read_csv('data/cybersecurity_intrusion_data.csv')
