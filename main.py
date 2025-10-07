@@ -518,7 +518,7 @@ def show_homepage():
     # Get Started Button
     if st.button("🚀 Get Started - Secure Login", key="get_started", use_container_width=True):
         st.session_state.show_login = True
-        st.rerun()
+        st.experimental_rerun()
 
 # --------------------------
 # MAIN APPLICATION FLOW
@@ -529,6 +529,8 @@ def main():
         st.session_state.show_login = False
     if 'logged_in' not in st.session_state:
         st.session_state.logged_in = False
+    if 'authentication_status' not in st.session_state:
+        st.session_state.authentication_status = None
     
     # Show homepage if not logged in and not showing login
     if not st.session_state.logged_in and not st.session_state.show_login:
@@ -541,46 +543,59 @@ def main():
         return
     
     # Show main application if logged in
-    show_main_application()
+    if st.session_state.logged_in:
+        show_main_application()
 
 def show_login_page():
     """Display login page"""
-    st.markdown("""
-    <div class="login-container">
-        <div class="main-header">🛡️ Sentinel-Auth</div>
-    </div>
-    """, unsafe_allow_html=True)
+    st.markdown('<div class="main-header">🛡️ Sentinel-Auth</div>', unsafe_allow_html=True)
     
-    # Login form in the centered container
-    with st.container():
-        name, authentication_status, username = authenticator.login(
-            fields={"form_name": "Login", "username": "Username", "password": "Password", "login": "Login"}, 
-            location="main"
-        )
+    # Create a centered container for login
+    col1, col2, col3 = st.columns([1, 2, 1])
+    
+    with col2:
+        st.markdown("""
+        <div style='background: rgba(255, 255, 255, 0.95); border-radius: 20px; padding: 40px; box-shadow: 0 20px 40px rgba(0,0,0,0.1);'>
+            <h2 style='text-align: center; color: #2e86ab; margin-bottom: 30px;'>Secure Login</h2>
+        """, unsafe_allow_html=True)
+        
+        # Use the authenticator login with simpler approach
+        try:
+            name, authentication_status, username = authenticator.login('Login', 'main')
+        except Exception as e:
+            st.error(f"Login error: {e}")
+            name, authentication_status, username = None, False, None
+        
+        st.markdown("</div>", unsafe_allow_html=True)
         
         # Back to homepage button
-        col1, col2, col3 = st.columns([1, 2, 1])
-        with col2:
-            if st.button("← Back to Homepage", use_container_width=True):
-                st.session_state.show_login = False
-                st.rerun()
-        
-        if authentication_status:
-            st.session_state.logged_in = True
-            st.session_state.username = username
-            st.session_state.name = name
-            st.rerun()
-        elif authentication_status is False:
-            st.error("❌ Username/password is incorrect")
-        elif authentication_status is None:
-            st.warning("ℹ️ Please enter your username and password")
+        if st.button("← Back to Homepage", use_container_width=True):
+            st.session_state.show_login = False
+            st.experimental_rerun()
+    
+    # Handle authentication status
+    if authentication_status:
+        st.session_state.logged_in = True
+        st.session_state.username = username
+        st.session_state.name = name
+        st.session_state.authentication_status = authentication_status
+        st.experimental_rerun()
+    elif authentication_status is False:
+        st.error("❌ Username/password is incorrect")
+    elif authentication_status is None:
+        st.warning("ℹ️ Please enter your username and password")
 
 def show_main_application():
     """Display main application after login"""
     # Sidebar with better styling
     with st.sidebar:
         st.success(f"🎉 Welcome, **{st.session_state.name}**!")
-        authenticator.logout("🚪 Logout", "sidebar")
+        
+        if authenticator.logout("🚪 Logout", "sidebar"):
+            st.session_state.logged_in = False
+            st.session_state.show_login = False
+            st.session_state.authentication_status = None
+            st.experimental_rerun()
         
         st.markdown("---")
         st.markdown("### 🧭 Navigation")
