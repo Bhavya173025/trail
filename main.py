@@ -19,98 +19,9 @@ st.set_page_config(
     initial_sidebar_state="expanded"
 )
 
-# --------------------------
-# ENHANCED CUSTOM CSS
-# --------------------------
+# Custom CSS for better styling
 st.markdown("""
 <style>
-    /* Main Background Gradient */
-    .stApp {
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    }
-    
-    /* Homepage Styles */
-    .homepage-header {
-        font-size: 4rem;
-        color: white;
-        text-align: center;
-        margin-bottom: 1rem;
-        font-weight: bold;
-        text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
-    }
-    
-    .homepage-subheader {
-        font-size: 1.5rem;
-        color: #f0f0f0;
-        text-align: center;
-        margin-bottom: 3rem;
-        font-weight: 300;
-    }
-    
-    .feature-card {
-        background: rgba(255, 255, 255, 0.95);
-        border-radius: 20px;
-        padding: 30px;
-        margin: 15px 0;
-        box-shadow: 0 10px 30px rgba(0,0,0,0.2);
-        border: 1px solid rgba(255,255,255,0.3);
-        transition: transform 0.3s ease;
-    }
-    
-    .feature-card:hover {
-        transform: translateY(-5px);
-    }
-    
-    .feature-icon {
-        font-size: 3rem;
-        margin-bottom: 15px;
-        text-align: center;
-    }
-    
-    .feature-title {
-        font-size: 1.5rem;
-        color: #2e86ab;
-        margin-bottom: 10px;
-        text-align: center;
-        font-weight: bold;
-    }
-    
-    .feature-description {
-        color: #666;
-        text-align: center;
-        line-height: 1.6;
-    }
-    
-    .get-started-btn {
-        background: linear-gradient(45deg, #FF6B6B, #FFE66D);
-        color: white;
-        padding: 15px 40px;
-        border-radius: 50px;
-        border: none;
-        font-size: 1.2rem;
-        font-weight: bold;
-        cursor: pointer;
-        box-shadow: 0 5px 15px rgba(255,107,107,0.4);
-        transition: all 0.3s ease;
-        display: block;
-        margin: 30px auto;
-    }
-    
-    .get-started-btn:hover {
-        transform: scale(1.05);
-        box-shadow: 0 8px 25px rgba(255,107,107,0.6);
-    }
-    
-    /* Login Page Styles */
-    .login-container {
-        background: rgba(255, 255, 255, 0.95);
-        border-radius: 20px;
-        padding: 40px;
-        margin: 50px auto;
-        max-width: 500px;
-        box-shadow: 0 20px 40px rgba(0,0,0,0.1);
-    }
-    
     .main-header {
         font-size: 3rem;
         color: #1f77b4;
@@ -118,102 +29,62 @@ st.markdown("""
         margin-bottom: 2rem;
         font-weight: bold;
     }
-    
     .section-header {
         font-size: 2rem;
         color: #2e86ab;
-        border-bottom: 3px solid #2e86ab;
+        border-bottom: 2px solid #2e86ab;
         padding-bottom: 0.5rem;
         margin-bottom: 1.5rem;
-        font-weight: bold;
     }
-    
     .success-box {
-        background: linear-gradient(135deg, #d4edda, #c3e6cb);
-        border: 2px solid #28a745;
-        border-radius: 15px;
+        background-color: #d4edda;
+        border: 1px solid #c3e6cb;
+        border-radius: 10px;
         padding: 20px;
         margin: 10px 0;
-        box-shadow: 0 5px 15px rgba(40,167,69,0.2);
     }
-    
     .warning-box {
-        background: linear-gradient(135deg, #fff3cd, #ffeaa7);
-        border: 2px solid #ffc107;
-        border-radius: 15px;
+        background-color: #fff3cd;
+        border: 1px solid #ffeaa7;
+        border-radius: 10px;
         padding: 20px;
         margin: 10px 0;
-        box-shadow: 0 5px 15px rgba(255,193,7,0.2);
     }
-    
     .danger-box {
-        background: linear-gradient(135deg, #f8d7da, #f5c6cb);
-        border: 2px solid #dc3545;
-        border-radius: 15px;
+        background-color: #f8d7da;
+        border: 1px solid #f5c6cb;
+        border-radius: 10px;
         padding: 20px;
         margin: 10px 0;
-        box-shadow: 0 5px 15px rgba(220,53,69,0.2);
     }
-    
     .info-box {
-        background: linear-gradient(135deg, #d1ecf1, #bee5eb);
-        border: 2px solid #17a2b8;
-        border-radius: 15px;
+        background-color: #d1ecf1;
+        border: 1px solid #bee5eb;
+        border-radius: 10px;
         padding: 20px;
         margin: 10px 0;
-        box-shadow: 0 5px 15px rgba(23,162,184,0.2);
     }
-    
     .prevention-box {
-        background: linear-gradient(135deg, #e8f5e8, #d4edda);
-        border: 2px solid #28a745;
-        border-radius: 15px;
+        background-color: #e8f5e8;
+        border: 2px solid #4caf50;
+        border-radius: 10px;
         padding: 20px;
         margin: 10px 0;
-        box-shadow: 0 5px 15px rgba(40,167,69,0.2);
     }
-    
     .metric-card {
         background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        border-radius: 20px;
-        padding: 25px;
+        border-radius: 15px;
+        padding: 20px;
         color: white;
         text-align: center;
         margin: 10px 0;
-        box-shadow: 0 8px 25px rgba(0,0,0,0.15);
-        transition: transform 0.3s ease;
     }
-    
-    .metric-card:hover {
-        transform: translateY(-5px);
-    }
-    
     .tip-card {
         background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 100%);
         border-radius: 15px;
-        padding: 20px;
+        padding: 15px;
         color: white;
         margin: 10px 0;
-        box-shadow: 0 5px 15px rgba(255,154,158,0.3);
-    }
-    
-    /* Chat message styles */
-    .user-message {
-        background: linear-gradient(135deg, #e3f2fd, #bbdefb);
-        border: 2px solid #2196f3;
-        border-radius: 20px;
-        padding: 15px;
-        margin: 10px 0;
-        box-shadow: 0 3px 10px rgba(33,150,243,0.2);
-    }
-    
-    .bot-message {
-        background: linear-gradient(135deg, #f3e5f5, #e1bee7);
-        border: 2px solid #9c27b0;
-        border-radius: 20px;
-        padding: 15px;
-        margin: 10px 0;
-        box-shadow: 0 3px 10px rgba(156,39,176,0.2);
     }
 </style>
 """, unsafe_allow_html=True)
@@ -240,7 +111,7 @@ authenticator = stauth.Authenticate(
 )
 
 # --------------------------
-# PREVENTION MODULE FUNCTIONS
+# ENHANCED PREVENTION MODULE FUNCTIONS
 # --------------------------
 class ThreatPrevention:
     @staticmethod
@@ -436,166 +307,20 @@ class ThreatPrevention:
         return score, recommendations
 
 # --------------------------
-# HOMEPAGE
+# LOGIN PAGE TITLE
 # --------------------------
-def show_homepage():
-    """Display beautiful homepage before login"""
-    st.markdown('<div class="homepage-header">🛡️ Sentinel-Auth</div>', unsafe_allow_html=True)
-    st.markdown('<div class="homepage-subheader">Advanced AI-Powered Threat Detection & Prevention System</div>', unsafe_allow_html=True)
-    
-    # Features Grid
-    col1, col2, col3 = st.columns(3)
-    
-    with col1:
-        st.markdown("""
-        <div class="feature-card">
-            <div class="feature-icon">🔒</div>
-            <div class="feature-title">Real-time Threat Detection</div>
-            <div class="feature-description">
-                Advanced URL scanning with VirusTotal API integration. 
-                Detect malicious websites and prevent cyber attacks before they happen.
-            </div>
-        </div>
-        """, unsafe_allow_html=True)
-        
-        st.markdown("""
-        <div class="feature-card">
-            <div class="feature-icon">🤖</div>
-            <div class="feature-title">AI Wikipedia Assistant</div>
-            <div class="feature-description">
-                Intelligent chatbot powered by Wikipedia. 
-                Get instant answers and research assistance for cybersecurity topics.
-            </div>
-        </div>
-        """, unsafe_allow_html=True)
-    
-    with col2:
-        st.markdown("""
-        <div class="feature-card">
-            <div class="feature-icon">🛡️</div>
-            <div class="feature-title">Proactive Prevention</div>
-            <div class="feature-description">
-                Comprehensive threat prevention tools including password analysis, 
-                phishing detection, and network security scanning.
-            </div>
-        </div>
-        """, unsafe_allow_html=True)
-        
-        st.markdown("""
-        <div class="feature-card">
-            <div class="feature-icon">📊</div>
-            <div class="feature-title">Data Analytics</div>
-            <div class="feature-description">
-                Visualize cybersecurity data with interactive charts and 
-                gain insights into attack patterns and security trends.
-            </div>
-        </div>
-        """, unsafe_allow_html=True)
-    
-    with col3:
-        st.markdown("""
-        <div class="feature-card">
-            <div class="feature-icon">🔍</div>
-            <div class="feature-title">Network Security</div>
-            <div class="feature-description">
-                Scan your network configurations for vulnerabilities 
-                and get personalized security recommendations.
-            </div>
-        </div>
-        """, unsafe_allow_html=True)
-        
-        st.markdown("""
-        <div class="feature-card">
-            <div class="feature-icon">📱</div>
-            <div class="feature-title">Social Media Protection</div>
-            <div class="feature-description">
-                Audit your social media security settings and 
-                protect your online presence from privacy threats.
-            </div>
-        </div>
-        """, unsafe_allow_html=True)
-    
-    # Get Started Button
-    if st.button("🚀 Get Started - Secure Login", key="get_started", use_container_width=True):
-        st.session_state.show_login = True
-        st.experimental_rerun()
+st.markdown('<div class="main-header">🛡️ Sentinel-Auth</div>', unsafe_allow_html=True)
 
 # --------------------------
-# MAIN APPLICATION FLOW
+# LOGIN FORM
 # --------------------------
-def main():
-    # Initialize session state
-    if 'show_login' not in st.session_state:
-        st.session_state.show_login = False
-    if 'logged_in' not in st.session_state:
-        st.session_state.logged_in = False
-    if 'authentication_status' not in st.session_state:
-        st.session_state.authentication_status = None
-    
-    # Show homepage if not logged in and not showing login
-    if not st.session_state.logged_in and not st.session_state.show_login:
-        show_homepage()
-        return
-    
-    # Show login page if requested
-    if not st.session_state.logged_in and st.session_state.show_login:
-        show_login_page()
-        return
-    
-    # Show main application if logged in
-    if st.session_state.logged_in:
-        show_main_application()
+name, authentication_status, username = authenticator.login(fields={"form_name": "Login"}, location="main")
 
-def show_login_page():
-    """Display login page"""
-    st.markdown('<div class="main-header">🛡️ Sentinel-Auth</div>', unsafe_allow_html=True)
-    
-    # Create a centered container for login
-    col1, col2, col3 = st.columns([1, 2, 1])
-    
-    with col2:
-        st.markdown("""
-        <div style='background: rgba(255, 255, 255, 0.95); border-radius: 20px; padding: 40px; box-shadow: 0 20px 40px rgba(0,0,0,0.1);'>
-            <h2 style='text-align: center; color: #2e86ab; margin-bottom: 30px;'>Secure Login</h2>
-        """, unsafe_allow_html=True)
-        
-        # Use the authenticator login with simpler approach
-        try:
-            name, authentication_status, username = authenticator.login('Login', 'main')
-        except Exception as e:
-            st.error(f"Login error: {e}")
-            name, authentication_status, username = None, False, None
-        
-        st.markdown("</div>", unsafe_allow_html=True)
-        
-        # Back to homepage button
-        if st.button("← Back to Homepage", use_container_width=True):
-            st.session_state.show_login = False
-            st.experimental_rerun()
-    
-    # Handle authentication status
-    if authentication_status:
-        st.session_state.logged_in = True
-        st.session_state.username = username
-        st.session_state.name = name
-        st.session_state.authentication_status = authentication_status
-        st.experimental_rerun()
-    elif authentication_status is False:
-        st.error("❌ Username/password is incorrect")
-    elif authentication_status is None:
-        st.warning("ℹ️ Please enter your username and password")
-
-def show_main_application():
-    """Display main application after login"""
+if authentication_status:
     # Sidebar with better styling
     with st.sidebar:
-        st.success(f"🎉 Welcome, **{st.session_state.name}**!")
-        
-        if authenticator.logout("🚪 Logout", "sidebar"):
-            st.session_state.logged_in = False
-            st.session_state.show_login = False
-            st.session_state.authentication_status = None
-            st.experimental_rerun()
+        st.success(f"🎉 Welcome, **{name}**!")
+        authenticator.logout("🚪 Logout", "sidebar")
         
         st.markdown("---")
         st.markdown("### 🧭 Navigation")
@@ -616,7 +341,7 @@ def show_main_application():
         """)
 
     # Wikipedia Chatbot Section
-    if section == "📚 Wikipedia Chatbot":
+    if "📚 Wikipedia Chatbot" in section:
         st.markdown('<div class="section-header">🤖 Wikipedia AI Assistant</div>', unsafe_allow_html=True)
         
         # Info box
@@ -664,19 +389,19 @@ def show_main_application():
         for msg in st.session_state.messages:
             if msg["role"] == "user":
                 st.markdown(f"""
-                <div class="user-message">
+                <div style='background-color: #e3f2fd; padding: 15px; border-radius: 15px; margin: 10px 0; border: 1px solid #bbdefb;'>
                     <strong>👤 You:</strong> {msg['content']}
                 </div>
                 """, unsafe_allow_html=True)
             else:
                 st.markdown(f"""
-                <div class="bot-message">
+                <div style='background-color: #f3e5f5; padding: 15px; border-radius: 15px; margin: 10px 0; border: 1px solid #e1bee7;'>
                     <strong>🤖 Choco:</strong> {msg['content']}
                 </div>
                 """, unsafe_allow_html=True)
 
     # Security Tools Section
-    elif section == "🛡️ Security Tools":
+    elif "🛡️ Security Tools" in section:
         st.markdown('<div class="section-header">🔒 Security Scanner</div>', unsafe_allow_html=True)
         
         # Metrics cards
@@ -811,8 +536,8 @@ def show_main_application():
                     with st.expander("📋 View Detailed Scan Report"):
                         st.json(details)
 
-    # THREAT PREVENTION SECTION
-    elif section == "🛡️ Threat Prevention":
+    # ENHANCED THREAT PREVENTION SECTION
+    elif "🛡️ Threat Prevention" in section:
         st.markdown('<div class="section-header">🛡️ Threat Prevention</div>', unsafe_allow_html=True)
         
         # Enhanced Prevention Metrics
@@ -954,7 +679,7 @@ def show_main_application():
                 else:
                     st.warning("Please enter some text to analyze.")
 
-        # NETWORK SECURITY SCANNER
+        # NEW: NETWORK SECURITY SCANNER
         with prev_tab3:
             st.subheader("🔍 Network Security Scanner")
             
@@ -1016,7 +741,7 @@ def show_main_application():
                     for i, rec in enumerate(recommendations, 1):
                         st.write(f"{i}. {rec}")
 
-        # SOCIAL MEDIA PROTECTION
+        # NEW: SOCIAL MEDIA PROTECTION
         with prev_tab4:
             st.subheader("📱 Social Media Protection")
             
@@ -1114,7 +839,7 @@ def show_main_application():
                 """, unsafe_allow_html=True)
 
     # Data Visualization Section
-    elif section == "📊 Data Visualization":
+    elif "📊 Data Visualization" in section:
         st.markdown('<div class="section-header">📈 Cybersecurity Analytics</div>', unsafe_allow_html=True)
         
         try:
@@ -1192,6 +917,18 @@ def show_main_application():
             st.error(f"❌ Error loading or visualizing data: {e}")
             st.info("💡 Make sure your dataset file is available at 'data/cybersecurity_intrusion_data.csv'")
 
-# Run the main function
-if __name__ == "__main__":
-    main()
+else:
+    if authentication_status is False:
+        st.markdown("""
+        <div class="danger-box">
+            <h4>❌ Login Failed</h4>
+            <p>Username or password is incorrect. Please try again.</p>
+        </div>
+        """, unsafe_allow_html=True)
+    elif authentication_status is None:
+        st.markdown("""
+        <div class="info-box">
+            <h4>🔐 Secure Login Required</h4>
+            <p>Please enter your username and password to access the Sentinel-Auth system.</p>
+        </div>
+        """, unsafe_allow_html=True)
