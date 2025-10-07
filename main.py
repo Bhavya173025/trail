@@ -1,3 +1,4 @@
+
 import streamlit as st
 import wikipedia
 import streamlit_authenticator as stauth
@@ -13,300 +14,78 @@ import random
 # PAGE CONFIGURATION
 # --------------------------
 st.set_page_config(
-    page_title="Sentinel-Auth | Security Platform",
+    page_title="Sentinel-Auth",
     page_icon="🛡️",
     layout="wide",
     initial_sidebar_state="expanded"
 )
 
-# --------------------------
-# PREMIUM AESTHETIC CSS THEME
-# --------------------------
+# Custom CSS for better styling
 st.markdown("""
 <style>
-    /* === MODERN COLOR PALETTE === */
-    :root {
-        --primary: #6366f1;
-        --primary-dark: #4f46e5;
-        --secondary: #10b981;
-        --accent: #f59e0b;
-        --danger: #ef4444;
-        --dark: #1f2937;
-        --darker: #111827;
-        --light: #f8fafc;
-        --gray: #6b7280;
-        --card-bg: rgba(255, 255, 255, 0.05);
-    }
-    
-    /* === MAIN APP STYLING === */
-    .stApp {
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    }
-    
-    .main-container {
-        background: rgba(255, 255, 255, 0.95);
-        backdrop-filter: blur(20px);
-        border-radius: 24px;
-        margin: 20px;
-        padding: 30px;
-        box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
-        border: 1px solid rgba(255, 255, 255, 0.2);
-    }
-    
-    /* === TYPOGRAPHY === */
-    .hero-title {
-        font-size: 4rem;
-        font-weight: 800;
-        background: linear-gradient(135deg, #667eea, #764ba2);
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
+    .main-header {
+        font-size: 3rem;
+        color: #1f77b4;
         text-align: center;
-        margin-bottom: 1rem;
-        font-family: 'Inter', sans-serif;
-    }
-    
-    .hero-subtitle {
-        font-size: 1.4rem;
-        color: #6b7280;
-        text-align: center;
-        margin-bottom: 3rem;
-        font-weight: 300;
-        font-family: 'Inter', sans-serif;
-    }
-    
-    .section-title {
-        font-size: 2.2rem;
-        font-weight: 700;
-        color: #1f2937;
         margin-bottom: 2rem;
-        border-left: 5px solid #6366f1;
-        padding-left: 1rem;
-        font-family: 'Inter', sans-serif;
+        font-weight: bold;
     }
-    
-    /* === PREMIUM CARDS === */
-    .feature-card {
-        background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
-        border-radius: 20px;
-        padding: 2.5rem;
-        margin: 1rem 0;
-        box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
-        border: 1px solid rgba(255, 255, 255, 0.3);
-        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        position: relative;
-        overflow: hidden;
-    }
-    
-    .feature-card::before {
-        content: '';
-        position: absolute;
-        top: 0;
-        left: 0;
-        right: 0;
-        height: 4px;
-        background: linear-gradient(90deg, #6366f1, #10b981);
-    }
-    
-    .feature-card:hover {
-        transform: translateY(-8px);
-        box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
-    }
-    
-    .feature-icon {
-        font-size: 3.5rem;
+    .section-header {
+        font-size: 2rem;
+        color: #2e86ab;
+        border-bottom: 2px solid #2e86ab;
+        padding-bottom: 0.5rem;
         margin-bottom: 1.5rem;
-        text-align: center;
-        background: linear-gradient(135deg, #6366f1, #8b5cf6);
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
     }
-    
-    .feature-title {
-        font-size: 1.5rem;
-        font-weight: 700;
-        color: #1f2937;
-        margin-bottom: 1rem;
-        text-align: center;
-        font-family: 'Inter', sans-serif;
+    .success-box {
+        background-color: #d4edda;
+        border: 1px solid #c3e6cb;
+        border-radius: 10px;
+        padding: 20px;
+        margin: 10px 0;
     }
-    
-    .feature-description {
-        color: #6b7280;
-        text-align: center;
-        line-height: 1.7;
-        font-size: 1rem;
-        font-family: 'Inter', sans-serif;
+    .warning-box {
+        background-color: #fff3cd;
+        border: 1px solid #ffeaa7;
+        border-radius: 10px;
+        padding: 20px;
+        margin: 10px 0;
     }
-    
-    /* === METRIC CARDS === */
+    .danger-box {
+        background-color: #f8d7da;
+        border: 1px solid #f5c6cb;
+        border-radius: 10px;
+        padding: 20px;
+        margin: 10px 0;
+    }
+    .info-box {
+        background-color: #d1ecf1;
+        border: 1px solid #bee5eb;
+        border-radius: 10px;
+        padding: 20px;
+        margin: 10px 0;
+    }
+    .prevention-box {
+        background-color: #e8f5e8;
+        border: 2px solid #4caf50;
+        border-radius: 10px;
+        padding: 20px;
+        margin: 10px 0;
+    }
     .metric-card {
-        background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
-        border-radius: 16px;
-        padding: 2rem;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        border-radius: 15px;
+        padding: 20px;
         color: white;
         text-align: center;
-        margin: 0.5rem;
-        box-shadow: 0 10px 25px -5px rgba(99, 102, 241, 0.3);
-        transition: all 0.3s ease;
-        border: 1px solid rgba(255, 255, 255, 0.1);
+        margin: 10px 0;
     }
-    
-    .metric-card:hover {
-        transform: translateY(-5px);
-        box-shadow: 0 20px 40px -10px rgba(99, 102, 241, 0.4);
-    }
-    
-    .metric-value {
-        font-size: 2.5rem;
-        font-weight: 800;
-        margin-bottom: 0.5rem;
-        font-family: 'Inter', sans-serif;
-    }
-    
-    .metric-label {
-        font-size: 1rem;
-        opacity: 0.9;
-        font-weight: 500;
-        font-family: 'Inter', sans-serif;
-    }
-    
-    /* === BUTTONS === */
-    .stButton button {
-        background: linear-gradient(135deg, #6366f1, #8b5cf6);
+    .tip-card {
+        background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 100%);
+        border-radius: 15px;
+        padding: 15px;
         color: white;
-        border: none;
-        padding: 0.75rem 2rem;
-        border-radius: 12px;
-        font-weight: 600;
-        font-size: 1rem;
-        transition: all 0.3s ease;
-        box-shadow: 0 4px 15px rgba(99, 102, 241, 0.3);
-        font-family: 'Inter', sans-serif;
-    }
-    
-    .stButton button:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 8px 25px rgba(99, 102, 241, 0.4);
-        background: linear-gradient(135deg, #5b5fd8, #7c4df5);
-    }
-    
-    /* === STATUS INDICATORS === */
-    .status-safe {
-        background: linear-gradient(135deg, #10b981, #34d399);
-        color: white;
-        padding: 0.5rem 1rem;
-        border-radius: 20px;
-        font-weight: 600;
-        display: inline-block;
-    }
-    
-    .status-warning {
-        background: linear-gradient(135deg, #f59e0b, #fbbf24);
-        color: white;
-        padding: 0.5rem 1rem;
-        border-radius: 20px;
-        font-weight: 600;
-        display: inline-block;
-    }
-    
-    .status-danger {
-        background: linear-gradient(135deg, #ef4444, #f87171);
-        color: white;
-        padding: 0.5rem 1rem;
-        border-radius: 20px;
-        font-weight: 600;
-        display: inline-block;
-    }
-    
-    /* === CHAT MESSAGES === */
-    .user-message {
-        background: linear-gradient(135deg, #6366f1, #8b5cf6);
-        color: white;
-        padding: 1.2rem 1.5rem;
-        border-radius: 20px 20px 5px 20px;
-        margin: 0.8rem 0;
-        max-width: 80%;
-        margin-left: auto;
-        box-shadow: 0 5px 15px rgba(99, 102, 241, 0.3);
-        font-family: 'Inter', sans-serif;
-    }
-    
-    .bot-message {
-        background: linear-gradient(135deg, #f8fafc, #e2e8f0);
-        color: #1f2937;
-        padding: 1.2rem 1.5rem;
-        border-radius: 20px 20px 20px 5px;
-        margin: 0.8rem 0;
-        max-width: 80%;
-        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-        border: 1px solid rgba(0, 0, 0, 0.05);
-        font-family: 'Inter', sans-serif;
-    }
-    
-    /* === LOGIN PAGE === */
-    .login-container {
-        background: rgba(255, 255, 255, 0.95);
-        backdrop-filter: blur(20px);
-        border-radius: 24px;
-        padding: 3rem;
-        margin: 2rem auto;
-        max-width: 500px;
-        box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
-        border: 1px solid rgba(255, 255, 255, 0.2);
-    }
-    
-    /* === SIDEBAR === */
-    .css-1d391kg {
-        background: linear-gradient(135deg, #1f2937 0%, #374151 100%);
-    }
-    
-    /* === PROGRESS BARS === */
-    .stProgress > div > div > div {
-        background: linear-gradient(90deg, #6366f1, #8b5cf6);
-    }
-    
-    /* === DATA FRAME STYLING === */
-    .dataframe {
-        border-radius: 12px;
-        overflow: hidden;
-        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-    }
-    
-    /* === TAB STYLING === */
-    .stTabs [data-baseweb="tab-list"] {
-        gap: 8px;
-    }
-    
-    .stTabs [data-baseweb="tab"] {
-        background: rgba(255, 255, 255, 0.1);
-        border-radius: 12px 12px 0 0;
-        padding: 12px 24px;
-        border: none;
-        font-weight: 600;
-    }
-    
-    .stTabs [aria-selected="true"] {
-        background: linear-gradient(135deg, #6366f1, #8b5cf6);
-        color: white;
-    }
-
-    /* === CUSTOM SCROLLBAR === */
-    ::-webkit-scrollbar {
-        width: 8px;
-    }
-    
-    ::-webkit-scrollbar-track {
-        background: #f1f1f1;
-        border-radius: 10px;
-    }
-    
-    ::-webkit-scrollbar-thumb {
-        background: linear-gradient(135deg, #6366f1, #8b5cf6);
-        border-radius: 10px;
-    }
-    
-    ::-webkit-scrollbar-thumb:hover {
-        background: linear-gradient(135deg, #5b5fd8, #7c4df5);
+        margin: 10px 0;
     }
 </style>
 """, unsafe_allow_html=True)
@@ -317,19 +96,13 @@ st.markdown("""
 hashed_passwords = stauth.Hasher(["admin123", "user123"]).generate()
 credentials = {
     "usernames": {
-        "admin": {
-            "name": "Administrator", 
-            "password": hashed_passwords[0]
-        },
-        "bhavya": {
-            "name": "Bhavya", 
-            "password": hashed_passwords[1]
-        },
+        "admin": {"name": "Administrator", "password": hashed_passwords[0]},
+        "bhavya": {"name": "Bhavya", "password": hashed_passwords[1]},
     }
 }
 
 # --------------------------
-# AUTHENTICATOR - FIXED VERSION
+# AUTHENTICATOR
 # --------------------------
 authenticator = stauth.Authenticate(
     credentials,
@@ -339,47 +112,41 @@ authenticator = stauth.Authenticate(
 )
 
 # --------------------------
-# THREAT PREVENTION MODULE
+# ENHANCED PREVENTION MODULE FUNCTIONS
 # --------------------------
 class ThreatPrevention:
     @staticmethod
     def analyze_password_strength(password):
-        """Analyze password strength with enhanced security checks"""
+        """AI-based password strength analysis"""
         score = 0
         feedback = []
         
         # Length check
         if len(password) >= 12:
             score += 2
-            feedback.append("✅ Password length is excellent")
         elif len(password) >= 8:
             score += 1
-            feedback.append("⚠️ Password length is good but could be longer")
         else:
-            feedback.append("❌ Password is too short (minimum 8 characters)")
+            feedback.append("❌ Password should be at least 8 characters long")
         
         # Complexity checks
-        if re.search(r'[A-Z]', password):
+        if re.search(r"[A-Z]", password):
             score += 1
-            feedback.append("✅ Contains uppercase letters")
         else:
             feedback.append("❌ Add uppercase letters")
             
-        if re.search(r'[a-z]', password):
+        if re.search(r"[a-z]", password):
             score += 1
-            feedback.append("✅ Contains lowercase letters")
         else:
             feedback.append("❌ Add lowercase letters")
             
-        if re.search(r'\d', password):
+        if re.search(r"\d", password):
             score += 1
-            feedback.append("✅ Contains numbers")
         else:
             feedback.append("❌ Add numbers")
             
-        if re.search(r'[!@#$%^&*(),.?":{}|<>]', password):
+        if re.search(r"[!@#$%^&*(),.?\":{}|<>]", password):
             score += 1
-            feedback.append("✅ Contains special characters")
         else:
             feedback.append("❌ Add special characters")
         
@@ -387,529 +154,782 @@ class ThreatPrevention:
         common_passwords = ["password", "123456", "qwerty", "admin", "welcome"]
         if password.lower() in common_passwords:
             score = 0
-            feedback.append("❌ This is a commonly used password")
+            feedback.append("🚨 This is a commonly used password!")
         
-        # Determine strength level
+        # Strength assessment
         if score >= 5:
-            strength = "Very Strong"
+            strength = "💪 Very Strong"
             color = "green"
-        elif score >= 4:
-            strength = "Strong"
-            color = "blue"
         elif score >= 3:
-            strength = "Moderate"
+            strength = "👍 Strong"
+            color = "blue"
+        elif score >= 2:
+            strength = "⚠️ Moderate"
             color = "orange"
         else:
-            strength = "Weak"
+            strength = "🚨 Weak"
             color = "red"
-        
-        return {
-            "score": score,
-            "max_score": 6,
-            "strength": strength,
-            "color": color,
-            "feedback": feedback
-        }
+            
+        return strength, feedback, score, color
 
     @staticmethod
-    def generate_secure_password(length=16):
-        """Generate a secure random password"""
-        uppercase = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
-        lowercase = "abcdefghijklmnopqrstuvwxyz"
-        numbers = "0123456789"
-        symbols = "!@#$%^&*()_+-=[]{}|;:,.<>?"
-        
-        all_chars = uppercase + lowercase + numbers + symbols
-        
-        # Ensure at least one character from each set
-        password = [
-            random.choice(uppercase),
-            random.choice(lowercase),
-            random.choice(numbers),
-            random.choice(symbols)
-        ]
-        
-        # Fill the rest randomly
-        password += [random.choice(all_chars) for _ in range(length - 4)]
-        
-        # Shuffle the password
-        random.shuffle(password)
-        
-        return ''.join(password)
+    def generate_secure_password(length=12):
+        """Generate AI-suggested secure password"""
+        chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*"
+        return ''.join(random.choice(chars) for _ in range(length))
 
     @staticmethod
-    def check_url_safety(url):
-        """Enhanced URL safety checker"""
-        # Basic URL validation
-        if not url.startswith(('http://', 'https://')):
-            url = 'https://' + url
-        
-        # Phishing pattern detection
-        suspicious_patterns = [
-            r'login\.', r'secure\.', r'account\.', r'verify\.',
-            r'password\.', r'confirm\.', r'update\.', r'billing\.'
-        ]
-        
-        warnings = []
-        for pattern in suspicious_patterns:
-            if re.search(pattern, url, re.IGNORECASE):
-                warnings.append(f"Suspicious pattern detected: {pattern}")
-        
-        # IP address instead of domain
-        ip_pattern = r'\d+\.\d+\.\d+\.\d+'
-        if re.search(ip_pattern, url):
-            warnings.append("URL contains IP address instead of domain name")
-        
-        # Short URL service detection
-        short_url_domains = ['bit.ly', 'tinyurl.com', 'goo.gl', 't.co', 'is.gd']
-        for domain in short_url_domains:
-            if domain in url:
-                warnings.append(f"URL uses short URL service: {domain}")
-        
-        return {
-            "url": url,
-            "warnings": warnings,
-            "is_suspicious": len(warnings) > 0,
-            "safety_score": max(0, 100 - len(warnings) * 20)
+    def check_phishing_indicators(email_text):
+        """AI-based phishing detection in email/text"""
+        indicators = {
+            "urgency": len(re.findall(r'urgent|immediately|quick|action required', email_text, re.IGNORECASE)),
+            "suspicious_links": len(re.findall(r'http://|https?://[^\s]+', email_text)),
+            "personal_info_requests": len(re.findall(r'password|account|login|verify|confirm', email_text, re.IGNORECASE)),
+            "suspicious_sender": len(re.findall(r'bank|paypal|amazon|microsoft', email_text, re.IGNORECASE)),
+            "grammar_errors": len(re.findall(r'\b(?:pleasse|urgentt|acount|securty)\b', email_text, re.IGNORECASE))
         }
+        
+        total_score = sum(indicators.values())
+        
+        if total_score >= 4:
+            return "🚨 High phishing risk detected!", indicators, "red"
+        elif total_score >= 2:
+            return "⚠️ Moderate phishing risk detected!", indicators, "orange"
+        else:
+            return "✅ Low phishing risk", indicators, "green"
+
+    @staticmethod
+    def get_security_recommendations(threat_type):
+        """AI-powered security recommendations"""
+        recommendations = {
+            "phishing": [
+                "Enable two-factor authentication on all accounts",
+                "Verify sender email addresses before clicking links",
+                "Use email filtering software",
+                "Educate team members about phishing signs",
+                "Report suspicious emails to your IT department"
+            ],
+            "malware": [
+                "Keep antivirus software updated",
+                "Regularly update operating systems and applications",
+                "Avoid downloading from untrusted sources",
+                "Use a firewall and intrusion detection system",
+                "Backup important data regularly"
+            ],
+            "weak_password": [
+                "Use password managers to generate and store strong passwords",
+                "Enable biometric authentication where available",
+                "Implement password expiration policies",
+                "Use passphrases instead of passwords",
+                "Monitor for password breaches regularly"
+            ],
+            "network": [
+                "Use VPN for remote connections",
+                "Implement network segmentation",
+                "Regular security audits and penetration testing",
+                "Monitor network traffic for anomalies",
+                "Use encrypted communication protocols"
+            ],
+            "social_media": [
+                "Review privacy settings regularly",
+                "Limit personal information sharing",
+                "Be cautious of friend requests from strangers",
+                "Use different passwords for social accounts",
+                "Enable login notifications"
+            ],
+            "data_breach": [
+                "Monitor dark web for compromised data",
+                "Change passwords immediately after breach",
+                "Enable credit monitoring if financial data exposed",
+                "Notify relevant authorities and users",
+                "Conduct security audit to identify vulnerabilities"
+            ]
+        }
+        return recommendations.get(threat_type, ["No specific recommendations available."])
+
+    @staticmethod
+    def analyze_network_security(network_type, security_protocol, devices_connected, remote_access, guest_network):
+        """Analyze network security configuration"""
+        security_score = 85  # Base score
+        
+        # Adjust score based on inputs
+        if security_protocol == "WPA3":
+            security_score += 15
+        elif security_protocol == "WPA2":
+            security_score += 10
+        elif security_protocol in ["WPA", "WEP"]:
+            security_score -= 10
+        else:  # Open
+            security_score -= 30
+        
+        if remote_access:
+            security_score -= 5
+        if guest_network:
+            security_score += 5
+            
+        # Generate recommendations
+        recommendations = []
+        if security_protocol in ["WPA", "WEP", "Open"]:
+            recommendations.append("🚨 Upgrade to WPA2 or WPA3 encryption immediately")
+        
+        if devices_connected > 20:
+            recommendations.append("⚠️ Consider network segmentation for many devices")
+        
+        if remote_access:
+            recommendations.append("🔒 Review and secure remote access configurations")
+        
+        if not recommendations:
+            recommendations.append("✅ Your network configuration appears secure")
+            
+        return security_score, recommendations
+
+    @staticmethod
+    def analyze_social_media_security(checks):
+        """Analyze social media security based on checklist"""
+        score = sum(checks) * 100 // len(checks) if checks else 0
+        
+        recommendations = []
+        if score < 80:
+            if not checks[0]:  # strong_password
+                recommendations.append("🔑 Use a strong, unique password for this platform")
+            if not checks[1]:  # two_factor
+                recommendations.append("📱 Enable two-factor authentication for extra security")
+            if not checks[2]:  # private_profile
+                recommendations.append("👤 Set your profile to private to control visibility")
+            if not checks[3]:  # location_off
+                recommendations.append("📍 Disable location sharing to protect your privacy")
+            if not checks[4]:  # review_tags
+                recommendations.append("🏷️ Enable tag review to control your online presence")
+            if not checks[5]:  # limited_data
+                recommendations.append("🔒 Limit data sharing with third-party apps")
+        else:
+            recommendations.append("✅ Your social media security settings are excellent!")
+            
+        return score, recommendations
 
 # --------------------------
-# ENHANCED HOMEPAGE WITH NEW THEME
+# LOGIN PAGE TITLE
 # --------------------------
-def show_homepage():
-    """Display premium homepage before login"""
-    st.markdown('<div class="hero-title">🛡️ Sentinel-Auth</div>', unsafe_allow_html=True)
-    st.markdown('<div class="hero-subtitle">Enterprise-Grade Threat Detection & AI-Powered Security Platform</div>', unsafe_allow_html=True)
-    
-    # Premium Features Grid
-    col1, col2, col3 = st.columns(3)
-    
-    with col1:
-        st.markdown("""
-        <div class="feature-card">
-            <div class="feature-icon">🔍</div>
-            <div class="feature-title">Advanced Threat Detection</div>
-            <div class="feature-description">
-                Real-time URL scanning powered by VirusTotal API with machine learning analysis for proactive threat identification.
-            </div>
-        </div>
-        """, unsafe_allow_html=True)
-        
-        st.markdown("""
-        <div class="feature-card">
-            <div class="feature-icon">🤖</div>
-            <div class="feature-title">AI Security Assistant</div>
-            <div class="feature-description">
-                Intelligent Wikipedia-powered chatbot for instant cybersecurity research and threat intelligence.
-            </div>
-        </div>
-        """, unsafe_allow_html=True)
-    
-    with col2:
-        st.markdown("""
-        <div class="feature-card">
-            <div class="feature-icon">🛡️</div>
-            <div class="feature-title">Proactive Prevention</div>
-            <div class="feature-description">
-                Comprehensive security tools including password analysis, phishing detection, and network vulnerability scanning.
-            </div>
-        </div>
-        """, unsafe_allow_html=True)
-        
-        st.markdown("""
-        <div class="feature-card">
-            <div class="feature-icon">📊</div>
-            <div class="feature-title">Security Analytics</div>
-            <div class="feature-description">
-                Advanced data visualization and threat intelligence dashboards with real-time security metrics.
-            </div>
-        </div>
-        """, unsafe_allow_html=True)
-    
-    with col3:
-        st.markdown("""
-        <div class="feature-card">
-            <div class="feature-icon">🌐</div>
-            <div class="feature-title">Network Security</div>
-            <div class="feature-description">
-                Complete network vulnerability assessment with AI-powered recommendations and security scoring.
-            </div>
-        </div>
-        """, unsafe_allow_html=True)
-        
-        st.markdown("""
-        <div class="feature-card">
-            <div class="feature-icon">🔒</div>
-            <div class="feature-title">Privacy Protection</div>
-            <div class="feature-description">
-                Social media security audits and data protection tools to safeguard your digital presence.
-            </div>
-        </div>
-        """, unsafe_allow_html=True)
-    
-    # Get Started Button
-    col1, col2, col3 = st.columns([1, 2, 1])
-    with col2:
-        if st.button("🚀 Launch Security Platform", key="get_started", use_container_width=True):
-            st.session_state.show_login = True
-            st.rerun()
+st.markdown('<div class="main-header">🛡️ Sentinel-Auth</div>', unsafe_allow_html=True)
 
 # --------------------------
-# ENHANCED MAIN APPLICATION WITH NEW THEME
+# LOGIN FORM
 # --------------------------
-def show_main_application():
-    """Display main application with premium styling"""
-    
-    # Premium Sidebar
+name, authentication_status, username = authenticator.login(fields={"form_name": "Login"}, location="main")
+
+if authentication_status:
+    # Sidebar with better styling
     with st.sidebar:
-        st.markdown(f"""
-        <div style='text-align: center; padding: 1rem; background: linear-gradient(135deg, #6366f1, #8b5cf6); border-radius: 15px; color: white; margin-bottom: 2rem;'>
-            <h3>🎉 Welcome back!</h3>
-            <h2>{st.session_state.name}</h2>
-        </div>
-        """, unsafe_allow_html=True)
-        
-        if authenticator.logout("🚪 Sign Out", "sidebar"):
-            st.session_state.logged_in = False
-            st.session_state.show_login = False
-            st.rerun()
+        st.success(f"🎉 Welcome, **{name}**!")
+        authenticator.logout("🚪 Logout", "sidebar")
         
         st.markdown("---")
-        st.markdown("### 🧭 Security Dashboard")
+        st.markdown("### 🧭 Navigation")
         section = st.radio(
-            "Navigation Menu:",
-            ["📊 Security Overview", "🔍 Threat Scanner", "🛡️ Prevention Tools", "📈 Analytics"],
+            "Choose your section:",
+            ["📚 Wikipedia Chatbot", "🛡️ Security Tools", "🛡️ Threat Prevention", "📊 Data Visualization"],
             key="nav"
         )
         
         st.markdown("---")
-        st.markdown("""
-        <div style='background: rgba(99, 102, 241, 0.1); padding: 1rem; border-radius: 12px; border-left: 4px solid #6366f1;'>
-            <h4>🛡️ Security Status</h4>
-            <p style='margin: 0; font-size: 0.9rem; color: #6b7280;'>All systems operational</p>
-        </div>
-        """, unsafe_allow_html=True)
+        st.markdown("### ℹ️ About")
+        st.info("""
+        **Sentinel-Auth** is a comprehensive security system that combines:
+        - Real-time URL scanning
+        - Proactive threat prevention
+        - Wikipedia AI chatbot
+        - Cybersecurity analytics
+        """)
 
-    # Main Content Area with Premium Styling
-    st.markdown(f'<div class="section-title">{get_section_title(section)}</div>', unsafe_allow_html=True)
-    
-    if section == "📊 Security Overview":
-        show_security_overview()
-    elif section == "🔍 Threat Scanner":
-        show_threat_scanner()
-    elif section == "🛡️ Prevention Tools":
-        show_prevention_tools()
-    elif section == "📈 Analytics":
-        show_analytics()
-
-def get_section_title(section):
-    """Get formatted section titles"""
-    titles = {
-        "📊 Security Overview": "Security Overview Dashboard",
-        "🔍 Threat Scanner": "Advanced Threat Detection",
-        "🛡️ Prevention Tools": "Security Prevention Suite", 
-        "📈 Analytics": "Security Analytics & Insights"
-    }
-    return titles.get(section, section)
-
-def show_security_overview():
-    """Enhanced security overview with premium metrics"""
-    # Security Metrics
-    st.markdown("### 🎯 Security Metrics")
-    col1, col2, col3, col4 = st.columns(4)
-    
-    with col1:
-        st.markdown("""
-        <div class="metric-card">
-            <div class="metric-value">98%</div>
-            <div class="metric-label">System Secure</div>
-        </div>
-        """, unsafe_allow_html=True)
-    
-    with col2:
-        st.markdown("""
-        <div class="metric-card">
-            <div class="metric-value">24/7</div>
-            <div class="metric-label">Active Monitoring</div>
-        </div>
-        """, unsafe_allow_html=True)
-    
-    with col3:
-        st.markdown("""
-        <div class="metric-card">
-            <div class="metric-value">0</div>
-            <div class="metric-label">Active Threats</div>
-        </div>
-        """, unsafe_allow_html=True)
-    
-    with col4:
-        st.markdown("""
-        <div class="metric-card">
-            <div class="metric-value">∞</div>
-            <div class="metric-label">Protected</div>
-        </div>
-        """, unsafe_allow_html=True)
-    
-    # Quick Actions
-    st.markdown("### ⚡ Quick Actions")
-    col1, col2, col3 = st.columns(3)
-    
-    with col1:
-        if st.button("🔍 Scan URL", use_container_width=True, key="quick_scan"):
-            st.session_state.nav = "🔍 Threat Scanner"
-            st.rerun()
-    
-    with col2:
-        if st.button("🛡️ Check Password", use_container_width=True, key="quick_pw"):
-            st.session_state.nav = "🛡️ Prevention Tools"
-            st.rerun()
-    
-    with col3:
-        if st.button("📊 View Reports", use_container_width=True, key="quick_reports"):
-            st.session_state.nav = "📈 Analytics"
-            st.rerun()
-
-    # Recent Activity
-    st.markdown("### 📋 Recent Security Events")
-    events_data = {
-        "Event": ["System Scan", "Password Audit", "URL Check", "Firewall Update"],
-        "Status": ["Completed", "Completed", "Completed", "Completed"],
-        "Time": ["2 minutes ago", "5 minutes ago", "15 minutes ago", "1 hour ago"]
-    }
-    events_df = pd.DataFrame(events_data)
-    st.dataframe(events_df, use_container_width=True)
-
-def show_threat_scanner():
-    """URL Threat Analysis with premium styling"""
-    st.markdown("### 🌐 URL Threat Analysis")
-    
-    col1, col2 = st.columns([2, 1])
-    
-    with col1:
-        url_input = st.text_input(
-            "Enter URL to scan:",
-            placeholder="https://example.com",
-            help="Enter the URL you want to check for security threats"
-        )
+    # Wikipedia Chatbot Section
+    if "📚 Wikipedia Chatbot" in section:
+        st.markdown('<div class="section-header">🤖 Wikipedia AI Assistant</div>', unsafe_allow_html=True)
         
-        if st.button("🔍 Scan URL", use_container_width=True):
-            if url_input:
-                with st.spinner("🛡️ Analyzing URL for threats..."):
-                    time.sleep(2)  # Simulate scanning
-                    result = ThreatPrevention.check_url_safety(url_input)
-                    
-                    st.markdown("### Scan Results")
-                    
-                    if result["is_suspicious"]:
-                        st.markdown(f'<div class="status-warning">⚠️ Suspicious URL Detected</div>', unsafe_allow_html=True)
-                        st.metric("Safety Score", f"{result['safety_score']}/100")
-                        
-                        st.markdown("#### ⚠️ Warnings:")
-                        for warning in result["warnings"]:
-                            st.write(f"- {warning}")
-                    else:
-                        st.markdown(f'<div class="status-safe">✅ URL Appears Safe</div>', unsafe_allow_html=True)
-                        st.metric("Safety Score", f"{result['safety_score']}/100")
-                        st.success("No immediate threats detected!")
-            else:
-                st.warning("Please enter a URL to scan")
-    
-    with col2:
-        st.markdown("""
-        <div style='background: rgba(16, 185, 129, 0.1); padding: 1.5rem; border-radius: 12px; border-left: 4px solid #10b981;'>
-            <h4>💡 Safety Tips</h4>
-            <ul style='color: #6b7280; font-size: 0.9rem;'>
-                <li>Always check URLs before clicking</li>
-                <li>Look for HTTPS in the address</li>
-                <li>Avoid shortened URLs</li>
-                <li>Verify domain names carefully</li>
-            </ul>
-        </div>
-        """, unsafe_allow_html=True)
-
-def show_prevention_tools():
-    """Security Prevention Suite with premium styling"""
-    st.markdown("### 🛡️ Security Prevention Suite")
-    
-    tab1, tab2, tab3 = st.tabs(["🔐 Password Analyzer", "🔄 Password Generator", "🌐 Network Security"])
-    
-    with tab1:
-        st.markdown("#### Password Strength Analyzer")
-        password = st.text_input("Enter password to analyze:", type="password")
-        
-        if password:
-            analysis = ThreatPrevention.analyze_password_strength(password)
-            
-            # Display strength
-            col1, col2 = st.columns([1, 2])
-            with col1:
-                st.metric("Strength", analysis["strength"])
-            with col2:
-                st.progress(analysis["score"] / analysis["max_score"])
-            
-            # Display feedback
-            st.markdown("#### Analysis Results:")
-            for item in analysis["feedback"]:
-                st.write(item)
-    
-    with tab2:
-        st.markdown("#### Secure Password Generator")
-        length = st.slider("Password Length", 8, 32, 16)
-        
-        if st.button("Generate Secure Password"):
-            password = ThreatPrevention.generate_secure_password(length)
-            st.code(password, language="text")
-            
-            # Quick copy functionality
-            st.button("📋 Copy to Clipboard", key="copy_pass")
-    
-    with tab3:
-        st.markdown("#### Network Security Scanner")
-        st.info("This feature performs basic network security checks")
-        
-        if st.button("Run Network Security Scan"):
-            with st.spinner("Scanning network configuration..."):
-                time.sleep(3)
-                
-                # Simulated scan results
-                scan_results = {
-                    "Firewall Status": "✅ Active",
-                    "VPN Connection": "✅ Secure",
-                    "Open Ports": "✅ Minimal",
-                    "Encryption": "✅ Enabled"
-                }
-                
-                for check, status in scan_results.items():
-                    col1, col2 = st.columns([2, 1])
-                    with col1:
-                        st.write(f"**{check}**")
-                    with col2:
-                        st.write(status)
-
-def show_analytics():
-    """Security Analytics & Insights with premium styling"""
-    st.markdown("### 📈 Security Analytics & Insights")
-    
-    # Sample security data
-    threat_data = {
-        "Month": ["Jan", "Feb", "Mar", "Apr", "May", "Jun"],
-        "Threats Blocked": [45, 52, 48, 67, 89, 76],
-        "False Positives": [2, 3, 1, 4, 2, 3],
-        "Response Time (ms)": [120, 115, 110, 105, 100, 95]
-    }
-    df = pd.DataFrame(threat_data)
-    
-    # Create charts
-    col1, col2 = st.columns(2)
-    
-    with col1:
-        fig = px.line(df, x="Month", y="Threats Blocked", 
-                     title="Monthly Threats Blocked", 
-                     line_shape="spline")
-        fig.update_traces(line=dict(color="#6366f1", width=4))
-        st.plotly_chart(fig, use_container_width=True)
-    
-    with col2:
-        fig = px.bar(df, x="Month", y="Response Time (ms)",
-                    title="Average Response Time",
-                    color="Response Time (ms)")
-        st.plotly_chart(fig, use_container_width=True)
-    
-    # Security Insights
-    st.markdown("### 🔍 Security Insights")
-    insights = [
-        "📈 Threat detection increased by 15% this month",
-        "🛡️ Password strength improved across all users",
-        "🌐 98% of scanned URLs were classified as safe",
-        "⚡ Average response time decreased by 25ms"
-    ]
-    
-    for insight in insights:
-        st.write(f"- {insight}")
-
-# --------------------------
-# MAIN APPLICATION FLOW
-# --------------------------
-def main():
-    # Initialize session state
-    if 'show_login' not in st.session_state:
-        st.session_state.show_login = False
-    if 'logged_in' not in st.session_state:
-        st.session_state.logged_in = False
-    if 'nav' not in st.session_state:
-        st.session_state.nav = "📊 Security Overview"
-    if 'name' not in st.session_state:
-        st.session_state.name = ""
-    if 'username' not in st.session_state:
-        st.session_state.username = ""
-    
-    # Application flow
-    if not st.session_state.logged_in and not st.session_state.show_login:
-        show_homepage()
-    elif not st.session_state.logged_in and st.session_state.show_login:
-        show_login_page()
-    elif st.session_state.logged_in:
-        show_main_application()
-
-def show_login_page():
-    """Premium login page with FIXED authentication"""
-    col1, col2, col3 = st.columns([1, 2, 1])
-    
-    with col2:
-        st.markdown("""
-        <div class="login-container">
-            <div style='text-align: center; margin-bottom: 2rem;'>
-                <h1 style='font-size: 2.5rem; color: #1f2937; margin-bottom: 0.5rem;'>🛡️</h1>
-                <h2 style='color: #1f2937; margin-bottom: 0.5rem;'>Sentinel-Auth</h2>
-                <p style='color: #6b7280;'>Secure Access Portal</p>
+        # Info box
+        with st.container():
+            st.markdown("""
+            <div class="info-box">
+            <h4>💡 How to use:</h4>
+            <p>Ask me anything! I'll search Wikipedia and give you a concise summary.</p>
             </div>
-        """, unsafe_allow_html=True)
+            """, unsafe_allow_html=True)
         
-        # FIXED: Use the correct login method without form_name
-        try:
-            # Updated login method for newer streamlit-authenticator versions
-            name, authentication_status, username = authenticator.login(
-                location='main',
-                fields={
-                    'form_name': 'Login Form',
-                    'username': 'Username', 
-                    'password': 'Password',
-                    'login': 'Login'
-                }
-            )
-        except Exception as e:
-            st.error(f"Authentication error: {str(e)}")
-            # Fallback to manual login form
-            st.markdown("### Manual Login")
-            username = st.text_input("Username")
-            password = st.text_input("Password", type="password")
-            if st.button("Login"):
-                if username in credentials["usernames"]:
-                    # In a real app, you'd verify the hashed password
-                    st.session_state.logged_in = True
-                    st.session_state.username = username
-                    st.session_state.name = credentials["usernames"][username]["name"]
-                    st.rerun()
-                else:
-                    st.error("Invalid credentials")
-        
-        st.markdown("</div>", unsafe_allow_html=True)
-        
-        # Back to homepage
-        if st.button("← Back to Home", use_container_width=True):
-            st.session_state.show_login = False
-            st.rerun()
-    
-    # Handle successful authentication
-    if 'authentication_status' in locals() and authentication_status:
-        st.session_state.logged_in = True
-        st.session_state.username = username
-        st.session_state.name = name
-        st.rerun()
-    elif 'authentication_status' in locals() and authentication_status is False:
-        st.error("Invalid credentials")
-    elif 'authentication_status' in locals() and authentication_status is None:
-        st.warning("Please enter your credentials")
+        if "messages" not in st.session_state:
+            st.session_state.messages = []
 
-if __name__ == "__main__":
-    main()
+        def get_wikipedia_summary(query):
+            try:
+                results = wikipedia.search(query)
+                if not results:
+                    return "Sorry, I couldn't find anything on that topic."
+                summary = wikipedia.summary(results[0], sentences=3, auto_suggest=False, redirect=True)
+                return summary
+            except wikipedia.DisambiguationError as e:
+                return f"Your query is ambiguous, did you mean: {', '.join(e.options[:5])}?"
+            except wikipedia.PageError:
+                return "Sorry, I couldn't find a page matching your query."
+            except Exception:
+                return "Oops, something went wrong."
+
+        # Chat interface
+        col1, col2 = st.columns([3, 1])
+        with col1:
+            user_input = st.text_input("💬 Ask me anything:", placeholder="Type your question here...")
+        with col2:
+            st.write("")  # Spacing
+            st.write("")
+            ask_button = st.button("🔍 Search", use_container_width=True)
+
+        if ask_button and user_input:
+            with st.spinner("🔍 Searching Wikipedia..."):
+                st.session_state.messages.append({"role": "user", "content": user_input})
+                bot_response = get_wikipedia_summary(user_input)
+                st.session_state.messages.append({"role": "bot", "content": bot_response})
+
+        # Display chat messages with better styling
+        for msg in st.session_state.messages:
+            if msg["role"] == "user":
+                st.markdown(f"""
+                <div style='background-color: #e3f2fd; padding: 15px; border-radius: 15px; margin: 10px 0; border: 1px solid #bbdefb;'>
+                    <strong>👤 You:</strong> {msg['content']}
+                </div>
+                """, unsafe_allow_html=True)
+            else:
+                st.markdown(f"""
+                <div style='background-color: #f3e5f5; padding: 15px; border-radius: 15px; margin: 10px 0; border: 1px solid #e1bee7;'>
+                    <strong>🤖 Choco:</strong> {msg['content']}
+                </div>
+                """, unsafe_allow_html=True)
+
+    # Security Tools Section
+    elif "🛡️ Security Tools" in section:
+        st.markdown('<div class="section-header">🔒 Security Scanner</div>', unsafe_allow_html=True)
+        
+        # Metrics cards
+        col1, col2, col3 = st.columns(3)
+        with col1:
+            st.markdown("""
+            <div class="metric-card">
+                <h3>🛡️ Real-time</h3>
+                <h2>URL Scanner</h2>
+                <p>VirusTotal API Powered</p>
+            </div>
+            """, unsafe_allow_html=True)
+        
+        with col2:
+            st.markdown("""
+            <div class="metric-card">
+                <h3>⚡ Instant</h3>
+                <h2>Threat Analysis</h2>
+                <p>Multiple Engine Check</p>
+            </div>
+            """, unsafe_allow_html=True)
+        
+        with col3:
+            st.markdown("""
+            <div class="metric-card">
+                <h3>📊 Detailed</h3>
+                <h2>Security Report</h2>
+                <p>Comprehensive Results</p>
+            </div>
+            """, unsafe_allow_html=True)
+
+        # URL Scanner
+        with st.container():
+            st.markdown("### 🌐 URL Safety Check")
+            
+            # Prefer to load from secrets.toml
+            try:
+                api_key = st.secrets["VIRUSTOTAL_API_KEY"]
+            except KeyError:
+                # fallback inline key not recommended for production
+                api_key = "eb6f6caad9a31538ced27f970b3e790af750d2da03f98bae9f3cb0ef66a34d77"
+
+            def check_url_safety(url):
+                headers = {"x-apikey": api_key}
+                # Submit URL for analysis
+                resp = requests.post(
+                    "https://www.virustotal.com/api/v3/urls",
+                    headers=headers,
+                    data={"url": url},
+                    timeout=10
+                )
+                if resp.status_code not in (200, 201):
+                    return None, f"API Error: {resp.status_code} - {resp.text}"
+
+                analysis_id = resp.json().get("data", {}).get("id")
+                if not analysis_id:
+                    return None, "Could not retrieve analysis ID."
+
+                # Poll analysis status
+                analysis_endpoint = f"https://www.virustotal.com/api/v3/analyses/{analysis_id}"
+                start = time.time()
+                while True:
+                    r = requests.get(analysis_endpoint, headers=headers, timeout=10)
+                    if r.status_code != 200:
+                        return None, f"API Error: {r.status_code} - {r.text}"
+                    data = r.json()
+                    status = data.get("data", {}).get("attributes", {}).get("status")
+                    if status == "completed":
+                        # Check verdict
+                        stats = data["data"]["attributes"].get("stats", {})
+                        malicious = stats.get("malicious", 0)
+                        suspicious = stats.get("suspicious", 0)
+                        if malicious > 0 or suspicious > 0:
+                            return False, data  # unsafe
+                        else:
+                            return True, data   # safe
+                    if time.time() - start > 12:  # timeout
+                        break
+                    time.sleep(1)
+
+                # fallback: fetch cached report using base64 URL id
+                url_id = base64.urlsafe_b64encode(url.encode()).decode().strip("=")
+                report = requests.get(f"https://www.virustotal.com/api/v3/urls/{url_id}", headers=headers)
+                if report.status_code == 200:
+                    data = report.json()
+                    stats = data["data"]["attributes"].get("last_analysis_stats", {})
+                    malicious = stats.get("malicious", 0)
+                    suspicious = stats.get("suspicious", 0)
+                    if malicious > 0 or suspicious > 0:
+                        return False, data
+                    else:
+                        return True, data
+                return None, f"Final API error: {report.status_code}"
+
+            url_input = st.text_input("Enter URL to scan:", placeholder="https://example.com")
+            scan_col1, scan_col2 = st.columns([1, 4])
+            with scan_col1:
+                scan_button = st.button("🔍 Scan URL", use_container_width=True)
+            
+            if scan_button:
+                if not url_input:
+                    st.error("❌ Please enter a URL.")
+                elif not (url_input.startswith("http://") or url_input.startswith("https://")):
+                    st.error("❌ URL must start with http:// or https://")
+                else:
+                    with st.spinner("🛡️ Scanning URL with multiple antivirus engines..."):
+                        safe, details = check_url_safety(url_input)
+                    
+                    if safe is None:
+                        st.markdown(f"""
+                        <div class="warning-box">
+                            <h4>⚠️ Scan Error</h4>
+                            <p>{details}</p>
+                        </div>
+                        """, unsafe_allow_html=True)
+                    elif safe:
+                        st.markdown("""
+                        <div class="success-box">
+                            <h4>✅ This URL is Safe!</h4>
+                            <p>No malicious activity detected by security engines.</p>
+                        </div>
+                        """, unsafe_allow_html=True)
+                    else:
+                        st.markdown("""
+                        <div class="danger-box">
+                            <h4>🚨 Malicious URL Detected!</h4>
+                            <p>This URL has been flagged by security engines as potentially dangerous.</p>
+                        </div>
+                        """, unsafe_allow_html=True)
+                    
+                    # Show detailed results in expander
+                    with st.expander("📋 View Detailed Scan Report"):
+                        st.json(details)
+
+    # ENHANCED THREAT PREVENTION SECTION
+    elif "🛡️ Threat Prevention" in section:
+        st.markdown('<div class="section-header">🛡️ Threat Prevention</div>', unsafe_allow_html=True)
+        
+        # Enhanced Prevention Metrics
+        col1, col2, col3, col4 = st.columns(4)
+        with col1:
+            st.markdown("""
+            <div class="metric-card">
+                <h3>🔐 Password</h3>
+                <h2>Strength Analyzer</h2>
+                <p>Security Assessment</p>
+            </div>
+            """, unsafe_allow_html=True)
+        
+        with col2:
+            st.markdown("""
+            <div class="metric-card">
+                <h3>🎣 Phishing</h3>
+                <h2>Detection System</h2>
+                <p>Email Security Analysis</p>
+            </div>
+            """, unsafe_allow_html=True)
+        
+        with col3:
+            st.markdown("""
+            <div class="metric-card">
+                <h3>🔍 Network</h3>
+                <h2>Security Scanner</h2>
+                <p>Vulnerability Check</p>
+            </div>
+            """, unsafe_allow_html=True)
+        
+        with col4:
+            st.markdown("""
+            <div class="metric-card">
+                <h3>📱 Social</h3>
+                <h2>Media Protection</h2>
+                <p>Privacy Audit</p>
+            </div>
+            """, unsafe_allow_html=True)
+
+        # EXPANDED Prevention Tools in Tabs
+        prev_tab1, prev_tab2, prev_tab3, prev_tab4, prev_tab5 = st.tabs([
+            "🔐 Password Security", 
+            "🎣 Phishing Detection", 
+            "🔍 Network Security",
+            "📱 Social Media",
+            "💡 Security Recommendations"
+        ])
+        
+        with prev_tab1:
+            st.subheader("Password Strength Analyzer")
+            
+            col1, col2 = st.columns([2, 1])
+            with col1:
+                password = st.text_input("Enter password to analyze:", type="password", 
+                                       placeholder="Type your password here...", key="pw_analyzer")
+                analyze_btn = st.button("🔍 Analyze Password", use_container_width=True, key="analyze_btn")
+            
+            with col2:
+                st.write("")
+                st.write("")
+                generate_btn = st.button("🎲 Generate Secure Password", use_container_width=True, key="generate_btn")
+            
+            if generate_btn:
+                secure_pass = ThreatPrevention.generate_secure_password()
+                st.session_state.generated_password = secure_pass
+                st.markdown(f"""
+                <div class="success-box">
+                    <h4>✅ Generated Secure Password:</h4>
+                    <code style='font-size: 1.2em; background: #f0f0f0; padding: 10px; border-radius: 5px;'>{secure_pass}</code>
+                    <p><small>Copy this password and store it securely!</small></p>
+                </div>
+                """, unsafe_allow_html=True)
+            
+            if analyze_btn and password:
+                strength, feedback, score, color = ThreatPrevention.analyze_password_strength(password)
+                
+                # Display strength result
+                st.markdown(f"<h3 style='color: {color};'>Password Strength: {strength}</h3>", unsafe_allow_html=True)
+                
+                # Progress bar for visual indication
+                progress_value = score / 5.0
+                st.progress(progress_value)
+                
+                # Feedback
+                if feedback:
+                    st.subheader("🔍 Improvement Suggestions:")
+                    for item in feedback:
+                        st.write(item)
+                else:
+                    st.success("🎉 Excellent! Your password meets all security criteria!")
+                
+                # Security tips
+                st.markdown("""
+                <div class="tip-card">
+                    <h4>💡 Password Security Tips:</h4>
+                    <ul>
+                        <li>Use at least 12 characters</li>
+                        <li>Combine uppercase, lowercase, numbers & symbols</li>
+                        <li>Avoid dictionary words and personal information</li>
+                        <li>Use unique passwords for different accounts</li>
+                        <li>Consider using a password manager</li>
+                    </ul>
+                </div>
+                """, unsafe_allow_html=True)
+        
+        with prev_tab2:
+            st.subheader("Phishing Detection")
+            
+            email_text = st.text_area(
+                "Paste email/text content to analyze:",
+                height=150,
+                placeholder="Paste the suspicious email or message content here...",
+                key="phishing_input"
+            )
+            
+            if st.button("🔍 Analyze for Phishing", use_container_width=True, key="phishing_btn"):
+                if email_text:
+                    with st.spinner("Analyzing content for phishing indicators..."):
+                        result, indicators, color = ThreatPrevention.check_phishing_indicators(email_text)
+                    
+                    st.markdown(f"<h3 style='color: {color};'>{result}</h3>", unsafe_allow_html=True)
+                    
+                    # Display detailed analysis
+                    st.subheader("📊 Detailed Analysis:")
+                    for indicator, count in indicators.items():
+                        st.write(f"**{indicator.replace('_', ' ').title()}:** {count} instances")
+                    
+                    # Recommendations
+                    if "High" in result or "Moderate" in result:
+                        st.markdown("""
+                        <div class="danger-box">
+                            <h4>🚨 Immediate Actions Recommended:</h4>
+                        """, unsafe_allow_html=True)
+                        recommendations = ThreatPrevention.get_security_recommendations("phishing")
+                        for rec in recommendations:
+                            st.write(f"• {rec}")
+                        st.markdown("</div>", unsafe_allow_html=True)
+                else:
+                    st.warning("Please enter some text to analyze.")
+
+        # NEW: NETWORK SECURITY SCANNER
+        with prev_tab3:
+            st.subheader("🔍 Network Security Scanner")
+            
+            st.markdown("""
+            <div class="info-box">
+                <h4>🌐 Network Security Assessment</h4>
+                <p>Scan your network for potential vulnerabilities and security issues.</p>
+            </div>
+            """, unsafe_allow_html=True)
+            
+            # Network assessment form
+            with st.form("network_scan"):
+                col1, col2 = st.columns(2)
+                
+                with col1:
+                    network_type = st.selectbox(
+                        "Network Type:",
+                        ["Home WiFi", "Office Network", "Public WiFi", "Enterprise Network"]
+                    )
+                    
+                    devices_connected = st.slider(
+                        "Number of connected devices:",
+                        min_value=1, max_value=50, value=5
+                    )
+                
+                with col2:
+                    security_protocol = st.selectbox(
+                        "Security Protocol:",
+                        ["WPA3", "WPA2", "WPA", "WEP", "Open"]
+                    )
+                    
+                    remote_access = st.checkbox("Remote access enabled")
+                    guest_network = st.checkbox("Guest network available")
+                
+                submitted = st.form_submit_button("🔍 Scan Network Security")
+            
+            if submitted:
+                with st.spinner("Scanning network configuration..."):
+                    time.sleep(2)  # Simulate scanning
+                    
+                    security_score, recommendations = ThreatPrevention.analyze_network_security(
+                        network_type, security_protocol, devices_connected, remote_access, guest_network
+                    )
+                    
+                    # Display results
+                    st.subheader("📊 Network Security Report")
+                    
+                    col1, col2, col3 = st.columns(3)
+                    with col1:
+                        st.metric("Security Score", f"{security_score}/100")
+                    with col2:
+                        risk_level = "Low" if security_score >= 80 else "Medium" if security_score >= 60 else "High"
+                        st.metric("Risk Level", risk_level)
+                    with col3:
+                        st.metric("Recommendations", len(recommendations))
+                    
+                    # Recommendations
+                    st.subheader("🛡️ Security Recommendations:")
+                    for i, rec in enumerate(recommendations, 1):
+                        st.write(f"{i}. {rec}")
+
+        # NEW: SOCIAL MEDIA PROTECTION
+        with prev_tab4:
+            st.subheader("📱 Social Media Protection")
+            
+            st.markdown("""
+            <div class="info-box">
+                <h4>🔒 Social Media Security Audit</h4>
+                <p>Check your social media profiles for privacy and security risks.</p>
+            </div>
+            """, unsafe_allow_html=True)
+            
+            social_platform = st.selectbox(
+                "Select Platform:",
+                ["Facebook", "Instagram", "Twitter", "LinkedIn", "TikTok", "All Platforms"],
+                key="social_platform"
+            )
+            
+            # Security checklist
+            st.subheader("🔍 Security Checklist")
+            
+            col1, col2 = st.columns(2)
+            
+            with col1:
+                strong_password = st.checkbox("Strong unique password")
+                two_factor = st.checkbox("Two-factor authentication enabled")
+                private_profile = st.checkbox("Profile set to private")
+            
+            with col2:
+                location_off = st.checkbox("Location sharing disabled")
+                review_tags = st.checkbox("Review tags before appearing")
+                limited_data = st.checkbox("Limited data sharing with third parties")
+            
+            if st.button("🛡️ Analyze Social Media Security", key="social_analysis"):
+                # Calculate security score
+                checks = [strong_password, two_factor, private_profile, location_off, review_tags, limited_data]
+                score, recommendations = ThreatPrevention.analyze_social_media_security(checks)
+                
+                st.subheader("📊 Security Analysis Results")
+                
+                # Display score with color
+                if score >= 80:
+                    color = "green"
+                    status = "Excellent"
+                elif score >= 60:
+                    color = "orange"
+                    status = "Good"
+                else:
+                    color = "red"
+                    status = "Needs Improvement"
+                
+                st.markdown(f"<h3 style='color: {color};'>Security Score: {score}% - {status}</h3>", unsafe_allow_html=True)
+                
+                # Progress bar
+                st.progress(score / 100)
+                
+                # Recommendations
+                st.subheader("💡 Improvement Suggestions:")
+                for rec in recommendations:
+                    st.write(f"• {rec}")
+
+        # ENHANCED SECURITY RECOMMENDATIONS
+        with prev_tab5:
+            st.subheader("💡 Security Recommendations")
+            
+            threat_type = st.selectbox(
+                "Select threat type for recommendations:",
+                ["phishing", "malware", "weak_password", "network", "social_media", "data_breach"],
+                key="threat_type"
+            )
+            
+            if st.button("🎯 Get Recommendations", use_container_width=True, key="rec_btn"):
+                recommendations = ThreatPrevention.get_security_recommendations(threat_type)
+                
+                st.markdown(f"""
+                <div class="prevention-box">
+                    <h4>🛡️ Security Recommendations for {threat_type.replace('_', ' ').title()}:</h4>
+                """, unsafe_allow_html=True)
+                
+                for i, rec in enumerate(recommendations, 1):
+                    st.write(f"{i}. {rec}")
+                
+                st.markdown("</div>", unsafe_allow_html=True)
+                
+                # Additional tips
+                st.markdown("""
+                <div class="info-box">
+                    <h4>💡 Proactive Security Measures:</h4>
+                    <ul>
+                        <li>Regular security awareness training</li>
+                        <li>Implement multi-layered security defense</li>
+                        <li>Regular security audits and updates</li>
+                        <li>Backup critical data regularly</li>
+                        <li>Monitor systems for unusual activity</li>
+                    </ul>
+                </div>
+                """, unsafe_allow_html=True)
+
+    # Data Visualization Section
+    elif "📊 Data Visualization" in section:
+        st.markdown('<div class="section-header">📈 Cybersecurity Analytics</div>', unsafe_allow_html=True)
+        
+        try:
+            data = pd.read_csv('data/cybersecurity_intrusion_data.csv')
+            
+            # Create columns for metrics
+            col1, col2, col3, col4 = st.columns(4)
+            
+            with col1:
+                total_attacks = data['attack_detected'].sum() if 'attack_detected' in data.columns else 0
+                st.metric("🚨 Total Attacks", total_attacks)
+            
+            with col2:
+                total_records = len(data)
+                st.metric("📊 Total Records", total_records)
+            
+            with col3:
+                attack_rate = (total_attacks / total_records * 100) if total_records > 0 else 0
+                st.metric("📈 Attack Rate", f"{attack_rate:.1f}%")
+            
+            with col4:
+                if 'protocol_type' in data.columns:
+                    unique_protocols = data['protocol_type'].nunique()
+                    st.metric("🔧 Protocols", unique_protocols)
+
+            # Create tabs for different visualizations
+            tab1, tab2, tab3 = st.tabs(["📊 Attack Distribution", "🔧 Protocol Analysis", "📋 Data Preview"])
+            
+            with tab1:
+                st.subheader("Attack vs Non-Attack Distribution")
+                if 'attack_detected' in data.columns:
+                    attack_counts = data['attack_detected'].value_counts()
+                    
+                    # Use Plotly for better charts
+                    fig = px.pie(
+                        values=attack_counts.values, 
+                        names=['Non-Attack' if x == 0 else 'Attack' for x in attack_counts.index],
+                        color=['Non-Attack' if x == 0 else 'Attack' for x in attack_counts.index],
+                        color_discrete_map={'Non-Attack':'green', 'Attack':'red'}
+                    )
+                    fig.update_traces(textposition='inside', textinfo='percent+label')
+                    st.plotly_chart(fig, use_container_width=True)
+                else:
+                    st.warning("Attack detection data not available in the dataset.")
+
+            with tab2:
+                st.subheader("Network Protocol Usage")
+                if 'protocol_type' in data.columns:
+                    protocol_counts = data['protocol_type'].value_counts()
+                    fig = px.bar(
+                        x=protocol_counts.index, 
+                        y=protocol_counts.values,
+                        labels={'x': 'Protocol Type', 'y': 'Count'},
+                        color=protocol_counts.values,
+                        color_continuous_scale='viridis'
+                    )
+                    st.plotly_chart(fig, use_container_width=True)
+                else:
+                    st.warning("Protocol type data not available in the dataset.")
+
+            with tab3:
+                st.subheader("Dataset Preview")
+                st.dataframe(data.head(10), use_container_width=True)
+                
+                # Dataset info
+                st.subheader("Dataset Information")
+                col1, col2 = st.columns(2)
+                with col1:
+                    st.write(f"**Shape:** {data.shape}")
+                    st.write(f"**Columns:** {len(data.columns)}")
+                with col2:
+                    st.write(f"**Memory Usage:** {data.memory_usage(deep=True).sum() / 1024 ** 2:.2f} MB")
+                    
+        except Exception as e:
+            st.error(f"❌ Error loading or visualizing data: {e}")
+            st.info("💡 Make sure your dataset file is available at 'data/cybersecurity_intrusion_data.csv'")
+
+else:
+    if authentication_status is False:
+        st.markdown("""
+        <div class="danger-box">
+            <h4>❌ Login Failed</h4>
+            <p>Username or password is incorrect. Please try again.</p>
+        </div>
+        """, unsafe_allow_html=True)
+    elif authentication_status is None:
+        st.markdown("""
+        <div class="info-box">
+            <h4>🔐 Secure Login Required</h4>
+            <p>Please enter your username and password to access the Sentinel-Auth system.</p>
+        </div>
+        """, unsafe_allow_html=True)
