@@ -111,7 +111,7 @@ authenticator = stauth.Authenticate(
 )
 
 # --------------------------
-# PREVENTION MODULE FUNCTIONS
+# ENHANCED PREVENTION MODULE FUNCTIONS
 # --------------------------
 class ThreatPrevention:
     @staticmethod
@@ -228,9 +228,83 @@ class ThreatPrevention:
                 "Regular security audits and penetration testing",
                 "Monitor network traffic for anomalies",
                 "Use encrypted communication protocols"
+            ],
+            "social_media": [
+                "Review privacy settings regularly",
+                "Limit personal information sharing",
+                "Be cautious of friend requests from strangers",
+                "Use different passwords for social accounts",
+                "Enable login notifications"
+            ],
+            "data_breach": [
+                "Monitor dark web for compromised data",
+                "Change passwords immediately after breach",
+                "Enable credit monitoring if financial data exposed",
+                "Notify relevant authorities and users",
+                "Conduct security audit to identify vulnerabilities"
             ]
         }
         return recommendations.get(threat_type, ["No specific recommendations available."])
+
+    @staticmethod
+    def analyze_network_security(network_type, security_protocol, devices_connected, remote_access, guest_network):
+        """Analyze network security configuration"""
+        security_score = 85  # Base score
+        
+        # Adjust score based on inputs
+        if security_protocol == "WPA3":
+            security_score += 15
+        elif security_protocol == "WPA2":
+            security_score += 10
+        elif security_protocol in ["WPA", "WEP"]:
+            security_score -= 10
+        else:  # Open
+            security_score -= 30
+        
+        if remote_access:
+            security_score -= 5
+        if guest_network:
+            security_score += 5
+            
+        # Generate recommendations
+        recommendations = []
+        if security_protocol in ["WPA", "WEP", "Open"]:
+            recommendations.append("🚨 Upgrade to WPA2 or WPA3 encryption immediately")
+        
+        if devices_connected > 20:
+            recommendations.append("⚠️ Consider network segmentation for many devices")
+        
+        if remote_access:
+            recommendations.append("🔒 Review and secure remote access configurations")
+        
+        if not recommendations:
+            recommendations.append("✅ Your network configuration appears secure")
+            
+        return security_score, recommendations
+
+    @staticmethod
+    def analyze_social_media_security(checks):
+        """Analyze social media security based on checklist"""
+        score = sum(checks) * 100 // len(checks) if checks else 0
+        
+        recommendations = []
+        if score < 80:
+            if not checks[0]:  # strong_password
+                recommendations.append("🔑 Use a strong, unique password for this platform")
+            if not checks[1]:  # two_factor
+                recommendations.append("📱 Enable two-factor authentication for extra security")
+            if not checks[2]:  # private_profile
+                recommendations.append("👤 Set your profile to private to control visibility")
+            if not checks[3]:  # location_off
+                recommendations.append("📍 Disable location sharing to protect your privacy")
+            if not checks[4]:  # review_tags
+                recommendations.append("🏷️ Enable tag review to control your online presence")
+            if not checks[5]:  # limited_data
+                recommendations.append("🔒 Limit data sharing with third-party apps")
+        else:
+            recommendations.append("✅ Your social media security settings are excellent!")
+            
+        return score, recommendations
 
 # --------------------------
 # LOGIN PAGE TITLE
@@ -462,11 +536,11 @@ if authentication_status:
                     with st.expander("📋 View Detailed Scan Report"):
                         st.json(details)
 
-    # THREAT PREVENTION SECTION
+    # ENHANCED THREAT PREVENTION SECTION
     elif "🛡️ Threat Prevention" in section:
         st.markdown('<div class="section-header">🛡️ Threat Prevention</div>', unsafe_allow_html=True)
         
-        # Prevention Metrics
+        # Enhanced Prevention Metrics
         col1, col2, col3, col4 = st.columns(4)
         with col1:
             st.markdown("""
@@ -489,36 +563,43 @@ if authentication_status:
         with col3:
             st.markdown("""
             <div class="metric-card">
-                <h3>💡 Security</h3>
-                <h2>Recommendations</h2>
-                <p>Expert Tips</p>
+                <h3>🔍 Network</h3>
+                <h2>Security Scanner</h2>
+                <p>Vulnerability Check</p>
             </div>
             """, unsafe_allow_html=True)
         
         with col4:
             st.markdown("""
             <div class="metric-card">
-                <h3>🛡️ Proactive</h3>
-                <h2>Protection</h2>
-                <p>Prevent Attacks</p>
+                <h3>📱 Social</h3>
+                <h2>Media Protection</h2>
+                <p>Privacy Audit</p>
             </div>
             """, unsafe_allow_html=True)
 
-        # Prevention Tools in Tabs
-        prev_tab1, prev_tab2, prev_tab3 = st.tabs(["🔐 Password Security", "🎣 Phishing Detection", "💡 Security Recommendations"])
+        # EXPANDED Prevention Tools in Tabs
+        prev_tab1, prev_tab2, prev_tab3, prev_tab4, prev_tab5 = st.tabs([
+            "🔐 Password Security", 
+            "🎣 Phishing Detection", 
+            "🔍 Network Security",
+            "📱 Social Media",
+            "💡 Security Recommendations"
+        ])
         
         with prev_tab1:
             st.subheader("Password Strength Analyzer")
             
             col1, col2 = st.columns([2, 1])
             with col1:
-                password = st.text_input("Enter password to analyze:", type="password", placeholder="Type your password here...")
-                analyze_btn = st.button("🔍 Analyze Password", use_container_width=True)
+                password = st.text_input("Enter password to analyze:", type="password", 
+                                       placeholder="Type your password here...", key="pw_analyzer")
+                analyze_btn = st.button("🔍 Analyze Password", use_container_width=True, key="analyze_btn")
             
             with col2:
                 st.write("")
                 st.write("")
-                generate_btn = st.button("🎲 Generate Secure Password", use_container_width=True)
+                generate_btn = st.button("🎲 Generate Secure Password", use_container_width=True, key="generate_btn")
             
             if generate_btn:
                 secure_pass = ThreatPrevention.generate_secure_password()
@@ -569,10 +650,11 @@ if authentication_status:
             email_text = st.text_area(
                 "Paste email/text content to analyze:",
                 height=150,
-                placeholder="Paste the suspicious email or message content here..."
+                placeholder="Paste the suspicious email or message content here...",
+                key="phishing_input"
             )
             
-            if st.button("🔍 Analyze for Phishing", use_container_width=True):
+            if st.button("🔍 Analyze for Phishing", use_container_width=True, key="phishing_btn"):
                 if email_text:
                     with st.spinner("Analyzing content for phishing indicators..."):
                         result, indicators, color = ThreatPrevention.check_phishing_indicators(email_text)
@@ -596,16 +678,140 @@ if authentication_status:
                         st.markdown("</div>", unsafe_allow_html=True)
                 else:
                     st.warning("Please enter some text to analyze.")
-        
+
+        # NEW: NETWORK SECURITY SCANNER
         with prev_tab3:
-            st.subheader("Security Recommendations")
+            st.subheader("🔍 Network Security Scanner")
+            
+            st.markdown("""
+            <div class="info-box">
+                <h4>🌐 Network Security Assessment</h4>
+                <p>Scan your network for potential vulnerabilities and security issues.</p>
+            </div>
+            """, unsafe_allow_html=True)
+            
+            # Network assessment form
+            with st.form("network_scan"):
+                col1, col2 = st.columns(2)
+                
+                with col1:
+                    network_type = st.selectbox(
+                        "Network Type:",
+                        ["Home WiFi", "Office Network", "Public WiFi", "Enterprise Network"]
+                    )
+                    
+                    devices_connected = st.slider(
+                        "Number of connected devices:",
+                        min_value=1, max_value=50, value=5
+                    )
+                
+                with col2:
+                    security_protocol = st.selectbox(
+                        "Security Protocol:",
+                        ["WPA3", "WPA2", "WPA", "WEP", "Open"]
+                    )
+                    
+                    remote_access = st.checkbox("Remote access enabled")
+                    guest_network = st.checkbox("Guest network available")
+                
+                submitted = st.form_submit_button("🔍 Scan Network Security")
+            
+            if submitted:
+                with st.spinner("Scanning network configuration..."):
+                    time.sleep(2)  # Simulate scanning
+                    
+                    security_score, recommendations = ThreatPrevention.analyze_network_security(
+                        network_type, security_protocol, devices_connected, remote_access, guest_network
+                    )
+                    
+                    # Display results
+                    st.subheader("📊 Network Security Report")
+                    
+                    col1, col2, col3 = st.columns(3)
+                    with col1:
+                        st.metric("Security Score", f"{security_score}/100")
+                    with col2:
+                        risk_level = "Low" if security_score >= 80 else "Medium" if security_score >= 60 else "High"
+                        st.metric("Risk Level", risk_level)
+                    with col3:
+                        st.metric("Recommendations", len(recommendations))
+                    
+                    # Recommendations
+                    st.subheader("🛡️ Security Recommendations:")
+                    for i, rec in enumerate(recommendations, 1):
+                        st.write(f"{i}. {rec}")
+
+        # NEW: SOCIAL MEDIA PROTECTION
+        with prev_tab4:
+            st.subheader("📱 Social Media Protection")
+            
+            st.markdown("""
+            <div class="info-box">
+                <h4>🔒 Social Media Security Audit</h4>
+                <p>Check your social media profiles for privacy and security risks.</p>
+            </div>
+            """, unsafe_allow_html=True)
+            
+            social_platform = st.selectbox(
+                "Select Platform:",
+                ["Facebook", "Instagram", "Twitter", "LinkedIn", "TikTok", "All Platforms"],
+                key="social_platform"
+            )
+            
+            # Security checklist
+            st.subheader("🔍 Security Checklist")
+            
+            col1, col2 = st.columns(2)
+            
+            with col1:
+                strong_password = st.checkbox("Strong unique password")
+                two_factor = st.checkbox("Two-factor authentication enabled")
+                private_profile = st.checkbox("Profile set to private")
+            
+            with col2:
+                location_off = st.checkbox("Location sharing disabled")
+                review_tags = st.checkbox("Review tags before appearing")
+                limited_data = st.checkbox("Limited data sharing with third parties")
+            
+            if st.button("🛡️ Analyze Social Media Security", key="social_analysis"):
+                # Calculate security score
+                checks = [strong_password, two_factor, private_profile, location_off, review_tags, limited_data]
+                score, recommendations = ThreatPrevention.analyze_social_media_security(checks)
+                
+                st.subheader("📊 Security Analysis Results")
+                
+                # Display score with color
+                if score >= 80:
+                    color = "green"
+                    status = "Excellent"
+                elif score >= 60:
+                    color = "orange"
+                    status = "Good"
+                else:
+                    color = "red"
+                    status = "Needs Improvement"
+                
+                st.markdown(f"<h3 style='color: {color};'>Security Score: {score}% - {status}</h3>", unsafe_allow_html=True)
+                
+                # Progress bar
+                st.progress(score / 100)
+                
+                # Recommendations
+                st.subheader("💡 Improvement Suggestions:")
+                for rec in recommendations:
+                    st.write(f"• {rec}")
+
+        # ENHANCED SECURITY RECOMMENDATIONS
+        with prev_tab5:
+            st.subheader("💡 Security Recommendations")
             
             threat_type = st.selectbox(
                 "Select threat type for recommendations:",
-                ["phishing", "malware", "weak_password", "network"]
+                ["phishing", "malware", "weak_password", "network", "social_media", "data_breach"],
+                key="threat_type"
             )
             
-            if st.button("🎯 Get Recommendations", use_container_width=True):
+            if st.button("🎯 Get Recommendations", use_container_width=True, key="rec_btn"):
                 recommendations = ThreatPrevention.get_security_recommendations(threat_type)
                 
                 st.markdown(f"""
