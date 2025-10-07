@@ -962,4 +962,221 @@ def show_main_application():
                     
                     devices_connected = st.slider(
                         "Number of connected devices:",
-                        min_value=1, max_value=
+                        min_value=1, max_value=50, value=5
+                    )
+                
+                with col2:
+                    security_protocol = st.selectbox(
+                        "Security Protocol:",
+                        ["WPA3", "WPA2", "WPA", "WEP", "Open"]
+                    )
+                    
+                    remote_access = st.checkbox("Remote access enabled")
+                    guest_network = st.checkbox("Guest network available")
+                
+                submitted = st.form_submit_button("🔍 Scan Network Security")
+            
+            if submitted:
+                with st.spinner("Scanning network configuration..."):
+                    time.sleep(2)  # Simulate scanning
+                    
+                    security_score, recommendations = ThreatPrevention.analyze_network_security(
+                        network_type, security_protocol, devices_connected, remote_access, guest_network
+                    )
+                    
+                    # Display results
+                    st.subheader("📊 Network Security Report")
+                    
+                    col1, col2, col3 = st.columns(3)
+                    with col1:
+                        st.metric("Security Score", f"{security_score}/100")
+                    with col2:
+                        risk_level = "Low" if security_score >= 80 else "Medium" if security_score >= 60 else "High"
+                        st.metric("Risk Level", risk_level)
+                    with col3:
+                        st.metric("Recommendations", len(recommendations))
+                    
+                    # Recommendations
+                    st.subheader("🛡️ Security Recommendations:")
+                    for i, rec in enumerate(recommendations, 1):
+                        st.write(f"{i}. {rec}")
+
+        # SOCIAL MEDIA PROTECTION
+        with prev_tab4:
+            st.subheader("📱 Social Media Protection")
+            
+            st.markdown("""
+            <div class="info-box">
+                <h4>🔒 Social Media Security Audit</h4>
+                <p>Check your social media profiles for privacy and security risks.</p>
+            </div>
+            """, unsafe_allow_html=True)
+            
+            social_platform = st.selectbox(
+                "Select Platform:",
+                ["Facebook", "Instagram", "Twitter", "LinkedIn", "TikTok", "All Platforms"],
+                key="social_platform"
+            )
+            
+            # Security checklist
+            st.subheader("🔍 Security Checklist")
+            
+            col1, col2 = st.columns(2)
+            
+            with col1:
+                strong_password = st.checkbox("Strong unique password")
+                two_factor = st.checkbox("Two-factor authentication enabled")
+                private_profile = st.checkbox("Profile set to private")
+            
+            with col2:
+                location_off = st.checkbox("Location sharing disabled")
+                review_tags = st.checkbox("Review tags before appearing")
+                limited_data = st.checkbox("Limited data sharing with third parties")
+            
+            if st.button("🛡️ Analyze Social Media Security", key="social_analysis"):
+                # Calculate security score
+                checks = [strong_password, two_factor, private_profile, location_off, review_tags, limited_data]
+                score, recommendations = ThreatPrevention.analyze_social_media_security(checks)
+                
+                st.subheader("📊 Security Analysis Results")
+                
+                # Display score with color
+                if score >= 80:
+                    color = "green"
+                    status = "Excellent"
+                elif score >= 60:
+                    color = "orange"
+                    status = "Good"
+                else:
+                    color = "red"
+                    status = "Needs Improvement"
+                
+                st.markdown(f"<h3 style='color: {color};'>Security Score: {score}% - {status}</h3>", unsafe_allow_html=True)
+                
+                # Progress bar
+                st.progress(score / 100)
+                
+                # Recommendations
+                st.subheader("💡 Improvement Suggestions:")
+                for rec in recommendations:
+                    st.write(f"• {rec}")
+
+        # ENHANCED SECURITY RECOMMENDATIONS
+        with prev_tab5:
+            st.subheader("💡 Security Recommendations")
+            
+            threat_type = st.selectbox(
+                "Select threat type for recommendations:",
+                ["phishing", "malware", "weak_password", "network", "social_media", "data_breach"],
+                key="threat_type"
+            )
+            
+            if st.button("🎯 Get Recommendations", use_container_width=True, key="rec_btn"):
+                recommendations = ThreatPrevention.get_security_recommendations(threat_type)
+                
+                st.markdown(f"""
+                <div class="prevention-box">
+                    <h4>🛡️ Security Recommendations for {threat_type.replace('_', ' ').title()}:</h4>
+                """, unsafe_allow_html=True)
+                
+                for i, rec in enumerate(recommendations, 1):
+                    st.write(f"{i}. {rec}")
+                
+                st.markdown("</div>", unsafe_allow_html=True)
+                
+                # Additional tips
+                st.markdown("""
+                <div class="info-box">
+                    <h4>💡 Proactive Security Measures:</h4>
+                    <ul>
+                        <li>Regular security awareness training</li>
+                        <li>Implement multi-layered security defense</li>
+                        <li>Regular security audits and updates</li>
+                        <li>Backup critical data regularly</li>
+                        <li>Monitor systems for unusual activity</li>
+                    </ul>
+                </div>
+                """, unsafe_allow_html=True)
+
+    # Data Visualization Section
+    elif section == "📊 Data Visualization":
+        st.markdown('<div class="section-header">📈 Cybersecurity Analytics</div>', unsafe_allow_html=True)
+        
+        try:
+            data = pd.read_csv('data/cybersecurity_intrusion_data.csv')
+            
+            # Create columns for metrics
+            col1, col2, col3, col4 = st.columns(4)
+            
+            with col1:
+                total_attacks = data['attack_detected'].sum() if 'attack_detected' in data.columns else 0
+                st.metric("🚨 Total Attacks", total_attacks)
+            
+            with col2:
+                total_records = len(data)
+                st.metric("📊 Total Records", total_records)
+            
+            with col3:
+                attack_rate = (total_attacks / total_records * 100) if total_records > 0 else 0
+                st.metric("📈 Attack Rate", f"{attack_rate:.1f}%")
+            
+            with col4:
+                if 'protocol_type' in data.columns:
+                    unique_protocols = data['protocol_type'].nunique()
+                    st.metric("🔧 Protocols", unique_protocols)
+
+            # Create tabs for different visualizations
+            tab1, tab2, tab3 = st.tabs(["📊 Attack Distribution", "🔧 Protocol Analysis", "📋 Data Preview"])
+            
+            with tab1:
+                st.subheader("Attack vs Non-Attack Distribution")
+                if 'attack_detected' in data.columns:
+                    attack_counts = data['attack_detected'].value_counts()
+                    
+                    # Use Plotly for better charts
+                    fig = px.pie(
+                        values=attack_counts.values, 
+                        names=['Non-Attack' if x == 0 else 'Attack' for x in attack_counts.index],
+                        color=['Non-Attack' if x == 0 else 'Attack' for x in attack_counts.index],
+                        color_discrete_map={'Non-Attack':'green', 'Attack':'red'}
+                    )
+                    fig.update_traces(textposition='inside', textinfo='percent+label')
+                    st.plotly_chart(fig, use_container_width=True)
+                else:
+                    st.warning("Attack detection data not available in the dataset.")
+
+            with tab2:
+                st.subheader("Network Protocol Usage")
+                if 'protocol_type' in data.columns:
+                    protocol_counts = data['protocol_type'].value_counts()
+                    fig = px.bar(
+                        x=protocol_counts.index, 
+                        y=protocol_counts.values,
+                        labels={'x': 'Protocol Type', 'y': 'Count'},
+                        color=protocol_counts.values,
+                        color_continuous_scale='viridis'
+                    )
+                    st.plotly_chart(fig, use_container_width=True)
+                else:
+                    st.warning("Protocol type data not available in the dataset.")
+
+            with tab3:
+                st.subheader("Dataset Preview")
+                st.dataframe(data.head(10), use_container_width=True)
+                
+                # Dataset info
+                st.subheader("Dataset Information")
+                col1, col2 = st.columns(2)
+                with col1:
+                    st.write(f"**Shape:** {data.shape}")
+                    st.write(f"**Columns:** {len(data.columns)}")
+                with col2:
+                    st.write(f"**Memory Usage:** {data.memory_usage(deep=True).sum() / 1024 ** 2:.2f} MB")
+                    
+        except Exception as e:
+            st.error(f"❌ Error loading or visualizing data: {e}")
+            st.info("💡 Make sure your dataset file is available at 'data/cybersecurity_intrusion_data.csv'")
+
+# Run the main function
+if __name__ == "__main__":
+    main()
