@@ -1222,7 +1222,6 @@ else:
         <div class="danger-box">
             <h4>❌ Login Failed</h4>
             <p>Username or password is incorrect. Please try again.</p>
-            <p><strong>Tip:</strong> Check your credentials and ensure Caps Lock is off.</p>
         </div>
         """, unsafe_allow_html=True)
     elif authentication_status is None:
@@ -1230,11 +1229,6 @@ else:
         <div class="info-box">
             <h4>🔐 Secure Login Required</h4>
             <p>Please enter your username and password to access the Sentinel-Auth cybersecurity platform.</p>
-            <p><strong>Demo Credentials:</strong></p>
-            <ul>
-                <li>Username: <code>admin</code> | Password: <code>admin123</code></li>
-                <li>Username: <code>bhavya</code> | Password: <code>user123</code></li>
-            </ul>
         </div>
         """, unsafe_allow_html=True)
 
