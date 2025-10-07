@@ -240,10 +240,9 @@ authenticator = stauth.Authenticate(
 )
 
 # --------------------------
-# PREVENTION MODULE FUNCTIONS (Keep your existing functions)
+# PREVENTION MODULE FUNCTIONS
 # --------------------------
 class ThreatPrevention:
-    # ... (Keep all your existing ThreatPrevention functions exactly as they were)
     @staticmethod
     def analyze_password_strength(password):
         """AI-based password strength analysis"""
@@ -601,7 +600,6 @@ def show_main_application():
         - Cybersecurity analytics
         """)
 
-    # Rest of your existing application code remains exactly the same...
     # Wikipedia Chatbot Section
     if section == "📚 Wikipedia Chatbot":
         st.markdown('<div class="section-header">🤖 Wikipedia AI Assistant</div>', unsafe_allow_html=True)
@@ -695,7 +693,7 @@ def show_main_application():
             </div>
             """, unsafe_allow_html=True)
 
-        # URL Scanner (keep your existing URL scanner code exactly as it was)
+        # URL Scanner
         with st.container():
             st.markdown("### 🌐 URL Safety Check")
             
@@ -798,9 +796,8 @@ def show_main_application():
                     with st.expander("📋 View Detailed Scan Report"):
                         st.json(details)
 
-    # THREAT PREVENTION SECTION (keep your existing enhanced prevention section)
+    # THREAT PREVENTION SECTION
     elif section == "🛡️ Threat Prevention":
-        # ... (Keep your entire existing Threat Prevention section code exactly as it was)
         st.markdown('<div class="section-header">🛡️ Threat Prevention</div>', unsafe_allow_html=True)
         
         # Enhanced Prevention Metrics
@@ -850,17 +847,119 @@ def show_main_application():
             "💡 Security Recommendations"
         ])
         
-        # ... (Keep all your existing tab content exactly as it was)
-
-    # Data Visualization Section (keep your existing data visualization code)
-    elif section == "📊 Data Visualization":
-        # ... (Keep your entire existing Data Visualization section code exactly as it was)
-        st.markdown('<div class="section-header">📈 Cybersecurity Analytics</div>', unsafe_allow_html=True)
+        with prev_tab1:
+            st.subheader("Password Strength Analyzer")
+            
+            col1, col2 = st.columns([2, 1])
+            with col1:
+                password = st.text_input("Enter password to analyze:", type="password", 
+                                       placeholder="Type your password here...", key="pw_analyzer")
+                analyze_btn = st.button("🔍 Analyze Password", use_container_width=True, key="analyze_btn")
+            
+            with col2:
+                st.write("")
+                st.write("")
+                generate_btn = st.button("🎲 Generate Secure Password", use_container_width=True, key="generate_btn")
+            
+            if generate_btn:
+                secure_pass = ThreatPrevention.generate_secure_password()
+                st.session_state.generated_password = secure_pass
+                st.markdown(f"""
+                <div class="success-box">
+                    <h4>✅ Generated Secure Password:</h4>
+                    <code style='font-size: 1.2em; background: #f0f0f0; padding: 10px; border-radius: 5px;'>{secure_pass}</code>
+                    <p><small>Copy this password and store it securely!</small></p>
+                </div>
+                """, unsafe_allow_html=True)
+            
+            if analyze_btn and password:
+                strength, feedback, score, color = ThreatPrevention.analyze_password_strength(password)
+                
+                # Display strength result
+                st.markdown(f"<h3 style='color: {color};'>Password Strength: {strength}</h3>", unsafe_allow_html=True)
+                
+                # Progress bar for visual indication
+                progress_value = score / 5.0
+                st.progress(progress_value)
+                
+                # Feedback
+                if feedback:
+                    st.subheader("🔍 Improvement Suggestions:")
+                    for item in feedback:
+                        st.write(item)
+                else:
+                    st.success("🎉 Excellent! Your password meets all security criteria!")
+                
+                # Security tips
+                st.markdown("""
+                <div class="tip-card">
+                    <h4>💡 Password Security Tips:</h4>
+                    <ul>
+                        <li>Use at least 12 characters</li>
+                        <li>Combine uppercase, lowercase, numbers & symbols</li>
+                        <li>Avoid dictionary words and personal information</li>
+                        <li>Use unique passwords for different accounts</li>
+                        <li>Consider using a password manager</li>
+                    </ul>
+                </div>
+                """, unsafe_allow_html=True)
         
-        try:
-            data = pd.read_csv('data/cybersecurity_intrusion_data.csv')
-            # ... (rest of your data visualization code)
+        with prev_tab2:
+            st.subheader("Phishing Detection")
+            
+            email_text = st.text_area(
+                "Paste email/text content to analyze:",
+                height=150,
+                placeholder="Paste the suspicious email or message content here...",
+                key="phishing_input"
+            )
+            
+            if st.button("🔍 Analyze for Phishing", use_container_width=True, key="phishing_btn"):
+                if email_text:
+                    with st.spinner("Analyzing content for phishing indicators..."):
+                        result, indicators, color = ThreatPrevention.check_phishing_indicators(email_text)
+                    
+                    st.markdown(f"<h3 style='color: {color};'>{result}</h3>", unsafe_allow_html=True)
+                    
+                    # Display detailed analysis
+                    st.subheader("📊 Detailed Analysis:")
+                    for indicator, count in indicators.items():
+                        st.write(f"**{indicator.replace('_', ' ').title()}:** {count} instances")
+                    
+                    # Recommendations
+                    if "High" in result or "Moderate" in result:
+                        st.markdown("""
+                        <div class="danger-box">
+                            <h4>🚨 Immediate Actions Recommended:</h4>
+                        """, unsafe_allow_html=True)
+                        recommendations = ThreatPrevention.get_security_recommendations("phishing")
+                        for rec in recommendations:
+                            st.write(f"• {rec}")
+                        st.markdown("</div>", unsafe_allow_html=True)
+                else:
+                    st.warning("Please enter some text to analyze.")
 
-# Run the main function
-if __name__ == "__main__":
-    main()
+        # NETWORK SECURITY SCANNER
+        with prev_tab3:
+            st.subheader("🔍 Network Security Scanner")
+            
+            st.markdown("""
+            <div class="info-box">
+                <h4>🌐 Network Security Assessment</h4>
+                <p>Scan your network for potential vulnerabilities and security issues.</p>
+            </div>
+            """, unsafe_allow_html=True)
+            
+            # Network assessment form
+            with st.form("network_scan"):
+                col1, col2 = st.columns(2)
+                
+                with col1:
+                    network_type = st.selectbox(
+                        "Network Type:",
+                        ["Home WiFi", "Office Network", "Public WiFi", "Enterprise Network"]
+                    )
+                    
+                    devices_connected = st.slider(
+                        "Number of connected devices:",
+                        min_value=1, max_value=
