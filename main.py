@@ -16,12 +16,6 @@ import hashlib
 # AI IMPORTS
 # --------------------------
 try:
-    import google.generativeai as genai
-    GEMINI_AVAILABLE = True
-except ImportError:
-    GEMINI_AVAILABLE = False
-
-try:
     from transformers import pipeline
     from sklearn.ensemble import IsolationForest
     import numpy as np
@@ -154,22 +148,10 @@ class AdvancedAISecurity:
     def setup_ai_models(self):
         """Initialize AI models with fallbacks"""
         self.models_available = {
-            "gemini": False,
             "huggingface": False,
             "sentiment": False,
             "classifier": False
         }
-        
-        # Setup Gemini
-        try:
-            gemini_key = st.secrets.get("GEMINI_API_KEY", "")
-            if gemini_key and GEMINI_AVAILABLE:
-                genai.configure(api_key=gemini_key)
-                self.gemini_model = genai.GenerativeModel('gemini-pro')
-                self.models_available["gemini"] = True
-                st.sidebar.success("✅ Gemini AI Loaded")
-        except Exception as e:
-            st.sidebar.warning(f"🔸 Gemini AI: {str(e)[:50]}...")
         
         # Setup Hugging Face Models
         try:
@@ -210,15 +192,6 @@ class AdvancedAISecurity:
             classification = self._ai_zero_shot_classification(email_text)
             analysis["ai_insights"].append(classification)
             analysis["risk_score"] += 2 if "phishing" in classification.lower() else 0
-        
-        # Gemini analysis if available
-        if self.models_available["gemini"]:
-            try:
-                gemini_analysis = self._gemini_phishing_analysis(email_text)
-                analysis["ai_insights"].append(f"Gemini: {gemini_analysis}")
-                analysis["risk_score"] += 1 if "suspicious" in gemini_analysis.lower() else 0
-            except:
-                analysis["ai_insights"].append("Gemini analysis unavailable")
         
         # Determine final verdict
         if analysis["risk_score"] >= 8:
@@ -285,28 +258,6 @@ class AdvancedAISecurity:
             return f"AI Classification: {top_label} ({top_score:.2f} confidence)"
         except Exception as e:
             return "Classification unavailable"
-    
-    def _gemini_phishing_analysis(self, text):
-        """Advanced analysis using Gemini AI"""
-        try:
-            prompt = f"""
-            Analyze this email for phishing indicators and provide a brief security assessment:
-            
-            Email Content: {text[:2000]}
-            
-            Provide a concise analysis focusing on:
-            1. Urgency tactics
-            2. Suspicious requests
-            3. Grammar and style issues
-            4. Overall risk assessment
-            
-            Keep response under 100 words.
-            """
-            
-            response = self.gemini_model.generate_content(prompt)
-            return response.text
-        except Exception as e:
-            return f"Gemini analysis error: {str(e)[:50]}"
     
     def smart_threat_prediction(self, user_behavior_data=None):
         """AI-powered threat prediction"""
@@ -635,11 +586,6 @@ if authentication_status:
         
         st.markdown("---")
         st.markdown("### 🤖 AI Status")
-        if advanced_ai.models_available["gemini"]:
-            st.success("✅ Gemini AI: Active")
-        else:
-            st.warning("🔸 Gemini AI: Not configured")
-            
         if advanced_ai.models_available["huggingface"]:
             st.success("✅ Hugging Face: Active")
         else:
@@ -988,7 +934,6 @@ if authentication_status:
                 <h4>🤖 Multi-Model AI Analysis</h4>
                 <p>Our system uses multiple AI models for comprehensive threat detection:</p>
                 <ul>
-                    <li><strong>Google Gemini:</strong> Advanced language understanding</li>
                     <li><strong>Hugging Face:</strong> Sentiment analysis and classification</li>
                     <li><strong>Pattern Recognition:</strong> Behavioral and linguistic analysis</li>
                     <li><strong>Machine Learning:</strong> Threat prediction and anomaly detection</li>
@@ -1135,11 +1080,6 @@ if authentication_status:
             
             with col1:
                 st.write("**Available AI Models:**")
-                if advanced_ai.models_available["gemini"]:
-                    st.success("✅ Google Gemini Pro - Active")
-                else:
-                    st.error("❌ Google Gemini - Not configured")
-                
                 if advanced_ai.models_available["huggingface"]:
                     st.success("✅ Hugging Face Models - Active")
                 else:
@@ -1167,15 +1107,14 @@ if authentication_status:
             # API Configuration Help
             with st.expander("🔧 API Configuration Guide"):
                 st.markdown("""
-                **To enable all AI features, add these to your `.streamlit/secrets.toml`:**
+                **To enable all AI features, add this to your `.streamlit/secrets.toml`:**
                 ```toml
                 VIRUSTOTAL_API_KEY = "eb6f6caad9a31538ced27f970b3e790af750d2da03f98bae9f3cb0ef66a34d77"
-                GEMINI_API_KEY = "AIzaSyD0VE0yTdx4W87f7uUVrzhyIDuhOChMmNM"
                 ```
                 
                 **Install required packages:**
                 ```bash
-                pip install google-generativeai transformers torch scikit-learn numpy
+                pip install transformers torch scikit-learn numpy
                 ```
                 """)
         
